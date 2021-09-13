@@ -1,0 +1,66 @@
+<tr id="job_item_{{ job.id }}" class="infinite-item">
+    <td scope="row">
+        <div class="custom-control custom-checkbox">
+            <input type="checkbox" value="{{ job.name }}" class="custom-control-input" id="{{ job.id }}">
+            <label class="custom-control-label" for="{{ job.id }}"></label>
+        </div>
+    </td>
+    <td>
+        <div class="software_logo">
+            <span class="version version_green">{{ job.software_version.version }}</span>
+            <img src={{ job.software_version.icon.url }}>
+        </div>
+    </td>
+    <td>
+        <strong class="job_name" data-toggle="tooltip" data-placement="top" title="{{ job.name }}">{{ job.name|truncatechars:25 }}</strong>
+        <span class="job_date"><i class="far fa-clock"></i>{{ job.date_created }}</span>
+    </td>
+    <td><span data-toggle="tooltip" data-placement="top"
+                  title="{{ job.frame_list }}">{{ job.get_frame_list_display|truncatechars:20 }}</span></td>
+    <td>
+        {{ job.render_plan.display_name }}
+    </td>
+    {% if job.progress|floatformat:"0" == '0' or job.progress|floatformat:"0" == '100' %}
+        <td>
+            <span class="j_stat job_{{ job.status.name }}" data-toggle="tooltip" data-placement="top"
+                  title="{{ job.status.description }}">{{ job.status.display_name }}</span>
+        </td>
+    {% else %}
+        <td>
+            <div class="progress">
+                <div class="progress-bar {{ job.status.name }}" role="progressbar" style="width: {{ job.progress|floatformat }}%;"
+                     aria-valuenow={{ job.progress|floatformat }} aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress_label">{{ job.status.display_name }} %{{ job.progress|floatformat }}</div>
+                </div>
+            </div>
+        </td>
+    {% endif %}
+    <td><strong>{{ job.cost|floatformat }} USD</strong></td>
+    <td style="text-align: right">
+        <a href="#" onclick="request_output_url(`{% url "job_output_url" %}`,`{{ job.name }}`);" data-toggle="tooltip" data-placement="top" title="Download Output Files" class="btn btn-light cloud_btn"><i class="fas fa-cloud-download-alt"></i></a>
+        {% if job.status.name == 'suspended' %}
+            <a {% if job.user.profile.balance > 0 %}onclick="request_pause_resume('{{ job.name }}');"{% endif %} data-toggle="tooltip" data-placement="top" title="Resume" class="btn btn-light {% if job.user.profile.balance <= 0 %}disabled{% endif %}"><i class="fas fa-play" ></i></a>
+        {% elif job.status.is_suspendable %}
+            <a onclick="request_pause_resume('{{ job.name }}');" data-toggle="tooltip" data-placement="top" title="Pause" class="btn btn-light"><i class="fas fa-pause" ></i></a>
+        {% endif %}
+        <div class="btn-group dropleft">
+            <a class="btn btn-link dropdown-toggle" data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-ellipsis-v"></i>
+            </a>
+
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="#" onclick="get_job_details('{{ job.name }}');" >Details</a>
+                <a class="dropdown-item" href="#" onclick="get_job_error_reports('{{ job.name }}');" >Error Reports</a>
+                <a class="dropdown-item {% if job.user.profile.balance <= 0 %}disabled{% endif %}" href="#" {% if job.user.profile.balance > 0 %}onclick="get_change_plan('{{ job.name }}');"{% endif %}>Change Plan</a>
+                {% if job.session_id %}
+                    <a class="dropdown-item" href="{% url 'advanced_keyshot_submitter'%}{{ job.session_id }}">Resubmit Job</a>
+                {% else %}
+                    <a class="dropdown-item {% if job.user.profile.balance <= 0 %}disabled{% endif %}" href="#" {% if job.user.profile.balance > 0 %}onclick="get_resubmit_job('{{ job.name }}');"{% endif %}>Resubmit Job</a>
+                {% endif %}
+                <a class="dropdown-item" href="{% url 'new_ticket'%}?subject={{ job.name }}">Report Bug</a>
+                <a class="dropdown-item" href="#" onclick="request_delete_job('{{ job.name }}');">Delete</a>
+            </div>
+        </div>
+    </td>
+</tr>

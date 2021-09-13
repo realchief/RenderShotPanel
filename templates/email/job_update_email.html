@@ -1,0 +1,8 @@
+{% extends 'email/email_base.html' %}
+{% load static %}
+{% block subject %}{{ subject}}{% endblock subject %}
+{% block description %}{{ description }}{% endblock description %}
+{% block paragraph_01 %}{{ paragraph_01|linebreaks }}{% endblock paragraph_01 %}
+{% block paragraph_02 %}{{ paragraph_02|linebreaks }}{% endblock paragraph_02 %}
+{% block action_text %}{{ action_text }}{% endblock action_text %}
+{% block action_url %}{{ action_url }}{% endblock action_url %}

@@ -1,0 +1,119 @@
+{% extends 'utils/panel_base.html' %}
+{% load static %}
+{% block content %}
+    <div class="header">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-8 col-xl-8">
+                    <div class="title">
+                        <img src="{% static "system/img/support_tm.svg" %}" alt="Tickets">
+                        <h1>Support Ticket</h1>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4 col-xl-4">
+                    {% include 'utils/panel_header_actions.html' %}
+                </div>
+            </div>
+        </div>
+        <div class="header_item">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <ul class="nav">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#">Support Ticket</a>
+                            </li>
+                            <li class="nav-item new_ticket_nav">
+                                <a class="nav-link" href="{% url 'new_ticket' %}"><i class="fas fa-ticket-alt"></i>Submit
+                                    New Ticket</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content tickets">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    {% include 'utils/messages.html' %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-12 col-lg-3 col-xl-3">
+                    <div class="box ticket_list">
+                        <div class="head">
+                            <div class="title">
+                                <h4>Ticket List</h4>
+                            </div>
+
+                            <div class="search-box">
+                                <input type="text" class="search-txt" placeholder="Search ..." , id="ticket_search">
+                                <a class="search-btn">
+                                    <i class="fas fa-search"></i>
+                                </a>
+                            </div>
+
+                        </div>
+
+                        {% if tickets %}
+                            <div class="box_content" id="tickets_list">
+                                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist"
+                                     aria-orientation="vertical">
+                                    {% for ticket in tickets %}
+                                        {% if ticket.number == selected_ticket.number %}
+                                            <a class="nav-link show active " data-toggle="pill"
+                                        {% else %}
+                                            <a class="nav-link" data-toggle="pill"
+                                        {% endif %}
+                                               id="{{ ticket.number }}"
+                                               onclick="request_ticket_replies(`{% url "get_ticket_replies" %}`,`{{ ticket.number }}`);"
+                                               href="#v-pills-home"
+                                               role="tab" aria-controls="v-pills-home" aria-selected="true">
+                                        <h5>{{ ticket.subject }}</h5>
+                                        <div class="t_stat ticket_{{ ticket.status }}">{{ ticket.get_status_display }}</div>
+                                        <span>{{ ticket.date_modified }}</span>
+
+                                    </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="box_content empty_list" id="replies_box">
+
+                                <img src="{% static "system/img/ticket.svg" %}" alt="Empty List">
+                                <span>Ticket Not Found</span>
+
+                            </div>
+                        {% endif %}
+                        <div class="foot">
+                            <div class="btn-group dropup">
+                                <a class="btn btn-link dropdown-toggle" data-toggle="dropdown"
+                                   aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-filter"></i>Filter
+                                </a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="">Remove Filters</a>
+                                    <a class="dropdown-item" href="#">Open</a>
+                                    <a class="dropdown-item" href="#">Closed</a>
+                                    <a class="dropdown-item" href="#">Resolved</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-12 col-lg-9 col-xl-9" id="replies_content">
+                    {% include 'ticketing/reply_content.html' %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
+{% block page_scripts %}
+    <script src="{% static "system/js/ticket/main.js" %}"></script>
+    <script src="{% static "system/js/ticket/tickets_scripts.js" %}"></script>
+{% endblock page_scripts %}
+
+

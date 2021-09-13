@@ -1,0 +1,46 @@
+{% load static %}
+<div class="modal fade" id="job_error_modal" tabindex="-1" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal_title">
+                    <h5 class="modal-title">Error Reports</h5>
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="default_row">
+                    <div class="text-center">
+                        <img src="{% static "system/img/joberror_icon.svg" %}" alt="Resubmit Job">
+                        <h5>{{ job.name }}</h5>
+                    </div>
+                    {% if errors %}
+                        {% for error in errors %}
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-subtitle mb-2 text-muted">{{ error.error }}</h6>
+                                    <p class="card-text">{{ error.description }}</p>
+                                    {% if error.solution %}
+                                        <div class="alert alert-success" role="alert">
+                                            <h6>Solutions</h6>
+                                            {{ error.solution }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="card">
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2 text-muted">No Error Reports Found</h6>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

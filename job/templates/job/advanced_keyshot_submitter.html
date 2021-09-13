@@ -1,0 +1,1233 @@
+{% extends 'utils/panel_base.html' %}
+{% load static %}
+{% block page_head %}
+    <link rel="stylesheet" href="{% static "system/css/select2.min.css" %}">
+{% endblock page_head %}
+{% block content %}
+    <div class="header">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-8 col-xl-8">
+                    <div class="title">
+                        <img src="{% static "system/img/jobs_tm.svg" %}">
+                        <h1>Submit KeyShot Job</h1>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4 col-xl-4">
+                    {% include 'utils/panel_header_actions.html' %}
+                </div>
+            </div>
+        </div>
+        <div class="header_item jl_item">
+            <div class="container">
+                <div class="row">
+                    <div class="col-9">
+                        <ul class="nav">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#">Submit Job</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content advanced_submit_job">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    {% include 'utils/messages.html' %}
+                </div>
+                <div class="col-12">
+
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        {{ form.active_render_mode }}
+                        {{ form.active_quality_mode }}
+                        {{ form.active_multi_task_mode }}
+
+                        <div class="box default_box">
+                            <div class="head">
+                                <div class="title">
+                                    <h4>Generic Options</h4>
+                                </div>
+                            </div>
+                            <div class="box_content">
+
+                                <div class="form-group row">
+                                    {{ form.keyshot_version.label }}
+                                    <div class="col-3">
+                                        {{ form.keyshot_version }}
+                                    </div>
+                                    {{ form.render_plan.label }}
+                                    <div class="col-3">
+                                        {{ form.render_plan }}
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    {{ form.render_engine.label }}
+                                    <div class="col-sm-9">
+
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <button class="btn btn-warning" type="button" data-toggle="modal"
+                                                        data-target="#RenderEngineModal"><i class="fas fa-question-circle"></i>
+                                                </button>
+
+                                            </div>
+                                            {{ form.render_engine }}
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    {{ form.source_file_name.label }}
+                                    <div class="col-9">
+                                        {{ form.source_file_name }}
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    {{ form.output_file_name.label }}
+                                    <div class="col-9">
+                                        <div class="input-group">
+                                            {{ form.output_file_name }}
+                                            <div class="input-group-append">
+                                                {{ form.output_format }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    {{ form.image_width.label }}
+                                    <div class="col-3">
+                                        {{ form.image_width }}
+                                    </div>
+                                    {{ form.image_height.label }}
+                                    <div class="col-3">
+                                        {{ form.image_height }}
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-12">
+                                        <div class="custom-control custom-switch">
+                                            {{ form.educational }}
+                                            {{ form.educational.label }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="box">
+                            <div class="box_content">
+                                <ul class="nav nav-tabs justify-content-end" id="render-mode-tab" role="tablist">
+
+                                    <li class="nav-item float-left" role="presentation">
+                                        <strong>Select Render Mode<i class="fas fa-angle-double-right"></i></strong>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link active" id="still-tab" data-toggle="tab" href="#still"
+                                           role="tab"
+                                           aria-controls="still" aria-selected="true">Still Image</a>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link" id="animation-tab" data-toggle="tab" href="#animation"
+                                           role="tab"
+                                           aria-controls="animation" aria-selected="false">Animation</a>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link" id="xr-tab" data-toggle="tab" href="#xr" role="tab"
+                                           aria-controls="xr"
+                                           aria-selected="false">KeyShotXR (Beta)</a>
+                                    </li>
+                                    {% if request.user.is_superuser or request.user.is_staff %}
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link"
+                                               id="configurator-tab" data-toggle="tab" href="#configurator"
+                                               role="tab" aria-controls="configurator"
+                                               aria-selected="false">Configurator</a>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link"
+                                               id="multimaterial-tab" data-toggle="tab"
+                                               href="#multimaterial"
+                                               role="tab" aria-controls="multimaterial"
+                                               aria-selected="false">Multi Material</a>
+                                        </li>
+                                    {% endif %}
+                                    <!--<span class="tab_title">Render Setting</span>-->
+                                </ul>
+                                <div class="tab-content" id="myTabContent">
+                                    <div class="tab-pane fade show active" id="still" role="tabpanel"
+                                         aria-labelledby="still-tab">
+                                        <div class="alert alert-success" role="alert">
+                                            No still image specific option found !
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane fade" id="animation" role="tabpanel"
+                                         aria-labelledby="animation-tab">
+
+                                        <div class="form-group row">
+                                            {{ form.anim_frame_list.label }}
+                                            <div class="col-9">
+                                                {{ form.anim_frame_list }}
+                                                <button type="button" class="btn btn-warning help_btn"
+                                                        data-toggle="modal"
+                                                        data-target="#HelpModal">
+                                                    <i class="fas fa-question-circle"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            {{ form.anim_fps.label }}
+                                            <div class="col-9">
+                                                {{ form.anim_fps }}
+                                            </div>
+                                        </div>
+
+
+                                        <div class="card">
+                                            <div class="card-header">
+                                                Video Output Setting
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="alert alert-danger" role="alert">
+                                                    <i class="fas fa-exclamation-triangle"></i>Render height must be
+                                                    divisible by 2 when using video output.
+                                                </div>
+
+                                                <div class="form-group row">
+                                                    <div class="col-12">
+                                                        <div class="custom-control custom-switch">
+                                                            {{ form.anim_video_output }}
+                                                            {{ form.anim_video_output.label }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row">
+                                                    {{ form.anim_video_output_file_name.label }}
+                                                    <div class="col-9">
+                                                        <div class="input-group">
+                                                            {{ form.anim_video_output_file_name }}
+                                                            <div class="input-group-append">
+                                                                {{ form.anim_video_output_format }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    {{ form.anim_video_output_fps.label }}
+                                                    <div class="col-9">
+                                                        {{ form.anim_video_output_fps }}
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="tab-pane fade" id="xr" role="tabpanel" aria-labelledby="xr-tab">
+                                        <div class="form-group row">
+                                            {{ form.xr_type.label }}
+                                            <div class="col-3">
+                                                {{ form.xr_type }}
+                                            </div>
+                                            {{ form.xr_center_type.label }}
+                                            <div class="col-3">
+                                                {{ form.xr_center_type }}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            {{ form.xr_viewport_width.label }}
+                                            <div class="col-3">
+                                                {{ form.xr_viewport_width }}
+                                            </div>
+                                            {{ form.xr_viewport_height.label }}
+                                            <div class="col-3">
+                                                {{ form.xr_viewport_height }}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            {{ form.xr_horizontal_frames.label }}
+                                            <div class="col-3">
+                                                {{ form.xr_horizontal_frames }}
+                                            </div>
+                                            {{ form.xr_vertical_frames.label }}
+                                            <div class="col-3">
+                                                {{ form.xr_vertical_frames }}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            {{ form.xr_horizontal_angel_begin.label }}
+                                            <div class="col-3">
+                                                {{ form.xr_horizontal_angel_begin }}
+                                            </div>
+                                            {{ form.xr_horizontal_angel_end.label }}
+                                            <div class="col-3">
+                                                {{ form.xr_horizontal_angel_end }}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            {{ form.xr_vertical_angel_begin.label }}
+                                            <div class="col-3">
+                                                {{ form.xr_vertical_angel_begin }}
+                                            </div>
+                                            {{ form.xr_vertical_angel_end.label }}
+                                            <div class="col-3">
+                                                {{ form.xr_vertical_angel_end }}
+                                            </div>
+                                        </div>
+
+                                        {#                                        <div class="form-group row">#}
+                                        {#                                            <div class="col-12">#}
+                                        {#                                                <div class="custom-control custom-switch">#}
+                                        {#                                                    {{ form.cfg_web }}#}
+                                        {#                                                    {{ form.cfg_web.label }}#}
+                                        {#                                                </div>#}
+                                        {#                                            </div>#}
+                                        {#                                        </div>#}
+                                        {##}
+                                        {#                                        <div class="form-group row">#}
+                                        {#                                            <div class="col-12">#}
+                                        {#                                                <div class="custom-control custom-switch">#}
+                                        {#                                                    {{ form.cfg_model_variations }}#}
+                                        {#                                                    {{ form.cfg_model_variations.label }}#}
+                                        {#                                                </div>#}
+                                        {#                                            </div>#}
+                                        {#                                        </div>#}
+                                        {#                                        <div class="form-group row">#}
+                                        {#                                            <div class="col-12">#}
+                                        {#                                                <div class="custom-control custom-switch">#}
+                                        {#                                                    {{ form.cfg_material_variations }}#}
+                                        {#                                                    {{ form.cfg_material_variations.label }}#}
+                                        {#                                                </div>#}
+                                        {#                                            </div>#}
+                                        {#                                        </div>#}
+                                        {#                                        <div class="form-group row">#}
+                                        {#                                            <div class="col-12">#}
+                                        {#                                                <div class="custom-control custom-switch">#}
+                                        {#                                                    {{ form.cfg_studio_variations }}#}
+                                        {#                                                    {{ form.cfg_studio_variations.label }}#}
+                                        {#                                                </div>#}
+                                        {#                                            </div>#}
+                                        {#                                        </div>#}
+                                        {#                                        <div class="form-group row">#}
+                                        {#                                            <div class="col-12">#}
+                                        {#                                                <div class="custom-control custom-switch">#}
+                                        {#                                                    {{ form.cfg_i_book }}#}
+                                        {#                                                    {{ form.cfg_i_book.label }}#}
+                                        {#                                                </div>#}
+                                        {#                                            </div>#}
+                                        {#                                        </div>#}
+                                        {##}
+                                        {#                                        <div class="form-group row">#}
+                                        {#                                            {{ form.cfg_i_book_width.label }}#}
+                                        {#                                            <div class="col-3">#}
+                                        {#                                                {{ form.cfg_i_book_width }}#}
+                                        {#                                            </div>#}
+                                        {#                                            {{ form.cfg_i_book_height.label }}#}
+                                        {#                                            <div class="col-3">#}
+                                        {#                                                {{ form.cfg_i_book_height }}#}
+                                        {#                                            </div>#}
+                                        {#                                        </div>#}
+
+                                    </div>
+
+                                    {% if request.user.is_superuser or request.user.is_staff %}
+                                        <div class="tab-pane fade" id="configurator" role="tabpanel"
+                                             aria-labelledby="configurator-tab"></div>
+
+                                        <div class="tab-pane fade" id="multimaterial" role="tabpanel"
+                                             aria-labelledby="multimaterial-tab">
+                                            <div class="form-group row">
+                                                {{ form.mtl_multi_material_name.label }}
+                                                <div class="col-9">
+                                                    {{ form.mtl_multi_material_name }}
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="box">
+                            <div class="box_content">
+                                <ul class="nav nav-tabs justify-content-end" id="quality-tab" role="tablist">
+
+                                    <li class="nav-item float-left" role="presentation">
+                                        <strong>
+                                            <div class="custom-control custom-checkbox">
+                                                {{ form.quality_override }}
+                                                {{ form.quality_override.label }}
+                                            </div>
+                                        </strong>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link active"
+                                           id="max-samples-tab" data-toggle="tab"
+                                           href="#max-samples" role="tab"
+                                           aria-controls="max-samples" aria-selected="true">Maximum Samples</a>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link"
+                                           id="custom-samples-tab" data-toggle="tab" href="#custom-samples"
+                                           role="tab"
+                                           aria-controls="custom-samples" aria-selected="false">Custom Control</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content" id="quality-tab-content">
+                                    <div class="tab-pane fade show active"
+                                         id="max-samples" role="tabpanel"
+                                         aria-labelledby="max-samples-tab">
+                                        <div class="form-group row">
+                                            {{ form.progressive_max_samples.label }}
+                                            <div class="col-3">
+                                                {{ form.progressive_max_samples }}
+                                            </div>
+                                            {{ form.engine_maxs_pixel_blur.label }}
+                                            <div class="col-3">
+                                                {{ form.engine_maxs_pixel_blur }}
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="tab-pane fade"
+                                         id="custom-samples" role="tabpanel"
+                                         aria-labelledby="custom-samples-tab">
+
+                                        <div class="alert alert-danger" role="alert">
+                                            <i class="fas fa-exclamation-triangle"></i>The Custom Control quality
+                                            setting is not supported with GPU Mode.
+                                        </div>
+                                        <div class="form-group row">
+                                            {{ form.advanced_samples.label }}
+                                            <div class="col-3">
+                                                {{ form.advanced_samples }}
+                                            </div>
+                                            {{ form.engine_global_illumination.label }}
+                                            <div class="col-3">
+                                                {{ form.engine_global_illumination }}
+                                            </div>
+
+                                        </div>
+
+                                        <div class="form-group row">
+                                            {{ form.engine_ray_bounces.label }}
+                                            <div class="col-3">
+                                                {{ form.engine_ray_bounces }}
+                                            </div>
+                                            {{ form.engine_pixel_blur.label }}
+                                            <div class="col-3">
+                                                {{ form.engine_pixel_blur }}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            {{ form.engine_anti_aliasing.label }}
+                                            <div class="col-3">
+                                                {{ form.engine_anti_aliasing }}
+                                            </div>
+                                            {{ form.engine_dof_quality.label }}
+                                            <div class="col-3">
+                                                {{ form.engine_dof_quality }}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            {{ form.engine_shadow_quality.label }}
+                                            <div class="col-3">
+                                                {{ form.engine_shadow_quality }}
+                                            </div>
+                                            {{ form.engine_caustics_quality.label }}
+                                            <div class="col-3">
+                                                {{ form.engine_caustics_quality }}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <div class="col-12">
+                                                <div class="custom-control custom-switch">
+                                                    {{ form.engine_sharper_texture_filtering }}
+                                                    {{ form.engine_sharper_texture_filtering.label }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-12">
+                                                <div class="custom-control custom-switch">
+                                                    {{ form.engine_global_illumination_cache }}
+                                                    {{ form.engine_global_illumination_cache.label }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-12">
+                                                <div class="custom-control custom-switch">
+                                                    {{ form.engine_sharp_shadows }}
+                                                    {{ form.engine_sharp_shadows.label }}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                        {#                        <div class="row">#}
+                        {#                            <div class="col-12">#}
+                        {#                                <div class="rs_collapse">#}
+                        {#                                    <button class="btn btn-light_2 w-100" type="button"#}
+                        {#                                            data-toggle="collapse"#}
+                        {#                                            data-target="#env_setting_collapse" aria-expanded="false"#}
+                        {#                                            aria-controls="env_setting_collapse">#}
+                        {##}
+                        {#                                        <div class="custom-control custom-checkbox">#}
+                        {#                                            {{ form.env_override }}#}
+                        {#                                            {{ form.env_override.label }}#}
+                        {#                                        </div>#}
+                        {##}
+                        {#                                    </button>#}
+                        {#                                    <div class="collapse" id="env_setting_collapse">#}
+                        {#                                        <div class="card card-body">#}
+                        {#                                            <br>#}
+                        {#                                            <div class="card">#}
+                        {#                                                <div class="card-header">#}
+                        {#                                                    Lighting#}
+                        {#                                                </div>#}
+                        {#                                                <div class="card-body">#}
+                        {#                                                    <div class="form-group row">#}
+                        {#                                                        {{ form.lighting_preset.label }}#}
+                        {#                                                        <div class="col-9">#}
+                        {#                                                            {{ form.lighting_preset }}#}
+                        {#                                                        </div>#}
+                        {#                                                    </div>#}
+                        {##}
+                        {#                                                </div>#}
+                        {#                                            </div>#}
+                        {#                                            <br>#}
+                        {#                                            <div class="card">#}
+                        {#                                                <div class="card-header">#}
+                        {#                                                    Adjustments#}
+                        {#                                                </div>#}
+                        {#                                                <div class="card-body">#}
+                        {#                                                    <div class="form-group row">#}
+                        {#                                                        {{ form.env_brightness.label }}#}
+                        {#                                                        <div class="col-9">#}
+                        {#                                                            {{ form.env_brightness }}#}
+                        {#                                                        </div>#}
+                        {#                                                    </div>#}
+                        {##}
+                        {#                                                </div>#}
+                        {#                                            </div>#}
+                        {#                                            <br>#}
+                        {#                                            <div class="card">#}
+                        {#                                                <div class="card-header">#}
+                        {#                                                    Transform#}
+                        {#                                                </div>#}
+                        {#                                                <div class="card-body">#}
+                        {#                                                    <div class="form-group row">#}
+                        {#                                                        {{ form.env_size.label }}#}
+                        {#                                                        <div class="col-9">#}
+                        {#                                                            {{ form.env_size }}#}
+                        {#                                                        </div>#}
+                        {#                                                    </div>#}
+                        {#                                                    <div class="form-group row">#}
+                        {#                                                        {{ form.env_height.label }}#}
+                        {#                                                        <div class="col-9">#}
+                        {#                                                            {{ form.env_height }}#}
+                        {#                                                        </div>#}
+                        {#                                                    </div>#}
+                        {#                                                    <div class="form-group row">#}
+                        {#                                                        {{ form.env_rotation.label }}#}
+                        {#                                                        <div class="col-9">#}
+                        {#                                                            {{ form.env_rotation }}#}
+                        {#                                                        </div>#}
+                        {#                                                    </div>#}
+                        {##}
+                        {#                                                </div>#}
+                        {#                                            </div>#}
+                        {#                                            <br>#}
+                        {#                                            <div class="card">#}
+                        {#                                                <div class="card-header">#}
+                        {#                                                    Transform#}
+                        {#                                                </div>#}
+                        {#                                                <div class="card-body">#}
+                        {#                                                    <div class="form-group row">#}
+                        {#                                                        {{ form.env_lighting_environment.label }}#}
+                        {#                                                        <div class="col-9">#}
+                        {#                                                            {{ form.env_lighting_environment }}#}
+                        {#                                                        </div>#}
+                        {#                                                    </div>#}
+                        {#                                                    <div class="form-group row">#}
+                        {#                                                        {{ form.env_background_color.label }}#}
+                        {#                                                        <div class="col-9">#}
+                        {#                                                            {{ form.env_background_color }}#}
+                        {#                                                        </div>#}
+                        {#                                                    </div>#}
+                        {#                                                    <div class="form-group row">#}
+                        {#                                                        {{ form.env_backplate_image.label }}#}
+                        {#                                                        <div class="col-9">#}
+                        {#                                                            {{ form.env_backplate_image }}#}
+                        {#                                                        </div>#}
+                        {#                                                    </div>#}
+                        {##}
+                        {#                                                </div>#}
+                        {#                                            </div>#}
+                        {#                                            <br>#}
+                        {#                                            <div class="card">#}
+                        {#                                                <div class="card-header">#}
+                        {#                                                    Ground#}
+                        {#                                                </div>#}
+                        {#                                                <div class="card-body">#}
+                        {#                                                    <div class="form-group row">#}
+                        {#                                                        <div class="col-12">#}
+                        {#                                                            <div class="custom-control custom-switch">#}
+                        {#                                                                {{ form.env_ground_shadows }}#}
+                        {#                                                                {{ form.env_ground_shadows.label }}#}
+                        {#                                                            </div>#}
+                        {#                                                        </div>#}
+                        {#                                                    </div>#}
+                        {#                                                    <div class="form-group row">#}
+                        {#                                                        <div class="col-12">#}
+                        {#                                                            <div class="custom-control custom-switch">#}
+                        {#                                                                {{ form.env_occlusion_ground_shadows }}#}
+                        {#                                                                {{ form.env_occlusion_ground_shadows.label }}#}
+                        {#                                                            </div>#}
+                        {#                                                        </div>#}
+                        {#                                                    </div>#}
+                        {#                                                    <div class="form-group row">#}
+                        {#                                                        <div class="col-12">#}
+                        {#                                                            <div class="custom-control custom-switch">#}
+                        {#                                                                {{ form.env_ground_reflections }}#}
+                        {#                                                                {{ form.env_ground_reflections.label }}#}
+                        {#                                                            </div>#}
+                        {#                                                        </div>#}
+                        {#                                                    </div>#}
+                        {#                                                    <div class="form-group row">#}
+                        {#                                                        <div class="col-12">#}
+                        {#                                                            <div class="custom-control custom-switch">#}
+                        {#                                                                {{ form.env_flatten_ground }}#}
+                        {#                                                                {{ form.env_flatten_ground.label }}#}
+                        {#                                                            </div>#}
+                        {#                                                        </div>#}
+                        {#                                                    </div>#}
+                        {#                                                    <div class="form-group row">#}
+                        {#                                                        {{ form.env_ground_size.label }}#}
+                        {#                                                        <div class="col-9">#}
+                        {#                                                            {{ form.env_ground_size }}#}
+                        {#                                                        </div>#}
+                        {#                                                    </div>#}
+                        {##}
+                        {#                                                </div>#}
+                        {#                                            </div>#}
+                        {##}
+                        {#                                        </div>#}
+                        {#                                    </div>#}
+                        {##}
+                        {##}
+                        {#                                </div>#}
+                        {#                            </div>#}
+                        {#                        </div>#}
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="rs_collapse">
+                                    <button class="btn btn-light_2 w-100" type="button"
+                                            data-toggle="collapse"
+                                            data-target="#lighting_collapse" aria-expanded="false"
+                                            aria-controls="lighting_collapse">
+
+                                        <div class="custom-control custom-checkbox">
+                                            {{ form.lighting_override }}
+                                            {{ form.lighting_override.label }}
+                                        </div>
+
+                                    </button>
+
+                                    <div class="collapse" id="lighting_collapse">
+                                        <div class="card card-body">
+
+                                            <div class="form-group row">
+                                                {{ form.lighting_preset.label }}
+                                                <div class="col-9">
+                                                    {{ form.lighting_preset }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                {{ form.engine_global_illumination_bounces.label }}
+                                                <div class="col-9">
+                                                    {{ form.engine_global_illumination_bounces }}
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="rs_collapse">
+                                    <button class="btn btn-light_2 w-100" type="button"
+                                            data-toggle="collapse"
+                                            data-target="#render_layer_collapse" aria-expanded="false"
+                                            aria-controls="render_layer_collapse">
+
+                                        <div class="custom-control custom-checkbox">
+                                            {{ form.rlyr_override }}
+                                            {{ form.rlyr_override.label }}
+                                        </div>
+
+                                    </button>
+
+                                    <div class="collapse" id="render_layer_collapse">
+                                        <div class="card card-body">
+
+                                            <div class="form-group row">
+                                                <div class="col-12">
+                                                    <div class="custom-control custom-switch">
+                                                        {{ form.rlyr_output_render_layers }}
+                                                        {{ form.rlyr_output_render_layers.label }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-12">
+                                                    <div class="custom-control custom-switch">
+                                                        {{ form.rlyr_output_alpha_channel }}
+                                                        {{ form.rlyr_output_alpha_channel.label }}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="rs_collapse">
+                                    <button class="btn btn-light_2 w-100" type="button"
+                                            data-toggle="collapse"
+                                            data-target="#render_pass_collapse" aria-expanded="false"
+                                            aria-controls="render_pass_collapse">
+
+                                        <div class="custom-control custom-checkbox">
+                                            {{ form.pass_override }}
+                                            {{ form.pass_override.label }}
+                                        </div>
+
+                                    </button>
+
+                                    <div class="collapse" id="render_pass_collapse">
+                                        <div class="card card-body">
+
+                                            <div class="form-group row">
+                                                <div class="col-12">
+                                                    <div class="custom-control custom-switch">
+                                                        {{ form.pass_all_render_passes }}
+                                                        {{ form.pass_all_render_passes.label }}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <div class="col-4">
+                                                    <div class="custom-control custom-switch">
+                                                        {{ form.pass_output_diffuse_pass }}
+                                                        {{ form.pass_output_diffuse_pass.label }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="custom-control custom-switch">
+                                                        {{ form.pass_output_reflection_pass }}
+                                                        {{ form.pass_output_reflection_pass.label }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="custom-control custom-switch">
+                                                        {{ form.pass_output_clown_pass }}
+                                                        {{ form.pass_output_clown_pass.label }}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <div class="col-4">
+                                                    <div class="custom-control custom-switch">
+                                                        {{ form.pass_output_direct_lighting_pass }}
+                                                        {{ form.pass_output_direct_lighting_pass.label }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="custom-control custom-switch">
+                                                        {{ form.pass_output_refraction_pass }}
+                                                        {{ form.pass_output_refraction_pass.label }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="custom-control custom-switch">
+                                                        {{ form.pass_output_depth_pass }}
+                                                        {{ form.pass_output_depth_pass.label }}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <div class="col-4">
+                                                    <div class="custom-control custom-switch">
+                                                        {{ form.pass_output_indirect_lighting_pass }}
+                                                        {{ form.pass_output_indirect_lighting_pass.label }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="custom-control custom-switch">
+                                                        {{ form.pass_output_shadow_pass }}
+                                                        {{ form.pass_output_shadow_pass.label }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="custom-control custom-switch">
+                                                        {{ form.pass_output_normals_pass }}
+                                                        {{ form.pass_output_normals_pass.label }}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <div class="col-4">
+                                                    <div class="custom-control custom-switch">
+                                                        {{ form.pass_output_caustics_pass }}
+                                                        {{ form.pass_output_caustics_pass.label }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="custom-control custom-switch">
+                                                        {{ form.pass_output_ambient_occlusion_pass }}
+                                                        {{ form.pass_output_ambient_occlusion_pass.label }}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Multi Submit Tab-->
+                        <div class="box">
+                            <div class="box_content">
+                                <div class="alert alert-warning tab_alert" role="alert">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    Only the active tab setting are going to be used.<br><br>
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    Multiple selection is not allowed on animation jobs.<br><br>
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    Multiple selection make a batch render on still image jobs.<br><br>
+                                    <i class="fas fa-exclamation-triangle"></i>Type-in and enter to add new options.
+                                </div>
+                                <ul class="nav nav-tabs justify-content-end" id="multi-mode-tab" role="tablist">
+
+                                    <li class="nav-item float-left" role="presentation">
+                                        <strong>
+                                            <div class="custom-control custom-checkbox">
+                                                {{ form.multi_override }}
+                                                {{ form.multi_override.label }}
+                                            </div>
+                                        </strong>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link active" id="studios-tab" data-toggle="tab"
+                                           href="#studios" role="tab"
+                                           aria-controls="studios" aria-selected="true">Studios</a>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link" id="cameras-tab" data-toggle="tab" href="#cameras"
+                                           role="tab"
+                                           aria-controls="cameras" aria-selected="false">Cameras</a>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link" id="model_sets-tab" data-toggle="tab" href="#model_sets"
+                                           role="tab"
+                                           aria-controls="model_sets" aria-selected="false">Model Sets</a>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link" id="image_styles-tab" data-toggle="tab" href="#image_styles"
+                                           role="tab"
+                                           aria-controls="image_styles" aria-selected="false">Image Styles</a>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link" id="environments-tab" data-toggle="tab" href="#environments"
+                                           role="tab"
+                                           aria-controls="environments" aria-selected="false">Environments</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content" id="myTabContent">
+                                    <div class="tab-pane fade show active" id="studios" role="tabpanel"
+                                         aria-labelledby="studios-tab">
+
+                                        <div class="form-group row">
+                                            {{ form.multi_studios.label }}
+                                            <div class="col-9">
+                                                {{ form.multi_studios }}
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="tab-pane fade" id="cameras" role="tabpanel"
+                                         aria-labelledby="cameras-tab">
+                                        <div class="form-group row">
+                                            {{ form.multi_cameras.label }}
+                                            <div class="col-9">
+                                                {{ form.multi_cameras }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane fade" id="model_sets" role="tabpanel"
+                                         aria-labelledby="model_setscameras-tab">
+                                        <div class="form-group row">
+                                            {{ form.multi_model_sets.label }}
+                                            <div class="col-9">
+                                                {{ form.multi_model_sets }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane fade" id="image_styles" role="tabpanel"
+                                         aria-labelledby="image_styles-tab">
+                                        <div class="form-group row">
+                                            {{ form.multi_image_styles.label }}
+                                            <div class="col-9">
+                                                {{ form.multi_image_styles }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane fade" id="environments" role="tabpanel"
+                                         aria-labelledby="environments-tab">
+                                        <div class="form-group row">
+                                            {{ form.multi_environments.label }}
+                                            <div class="col-9">
+                                                {{ form.multi_environments }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {#                        <div class="row">#}
+                        {#                            <div class="col-12">#}
+                        {#                                <button class="btn btn-light_2 w-100" type="button"#}
+                        {#                                        data-toggle="collapse"#}
+                        {#                                        data-target="#image_style_collapse" aria-expanded="false"#}
+                        {#                                        aria-controls="image_style_collapse">#}
+                        {##}
+                        {#                                    <div class="custom-control custom-checkbox">#}
+                        {#                                        {{ form.imgstyl_override }}#}
+                        {#                                        {{ form.imgstyl_override.label }}#}
+                        {#                                    </div>#}
+                        {##}
+                        {#                                </button>#}
+                        {##}
+                        {#                                <div class="collapse" id="image_style_collapse">#}
+                        {#                                    <div class="card card-body">#}
+                        {#                                        <div class="form-group row">#}
+                        {#                                            {{ form.imgstyl_kind.label }}#}
+                        {#                                            <div class="col-9">#}
+                        {#                                                {{ form.imgstyl_kind }}#}
+                        {#                                            </div>#}
+                        {#                                        </div>#}
+                        {#                                        <div class="form-group row">#}
+                        {#                                            <div class="col-4">#}
+                        {#                                                <div class="custom-control custom-switch">#}
+                        {#                                                    {{ form.imgstyl_vignette }}#}
+                        {#                                                    {{ form.imgstyl_vignette.label }}#}
+                        {#                                                </div>#}
+                        {#                                            </div>#}
+                        {#                                            <div class="col-4">#}
+                        {#                                                <div class="custom-control custom-switch">#}
+                        {#                                                    {{ form.imgstyl_bloom }}#}
+                        {#                                                    {{ form.imgstyl_bloom.label }}#}
+                        {#                                                </div>#}
+                        {#                                            </div>#}
+                        {#                                            <div class="col-4">#}
+                        {#                                                <div class="custom-control custom-switch">#}
+                        {#                                                    {{ form.imgstyl_chromatic_aberration }}#}
+                        {#                                                    {{ form.imgstyl_chromatic_aberration.label }}#}
+                        {#                                                </div>#}
+                        {#                                            </div>#}
+                        {#                                        </div>#}
+                        {##}
+                        {#                                        <div class="form-group row">#}
+                        {#                                            <div class="col-4">#}
+                        {#                                                <div class="custom-control custom-switch">#}
+                        {#                                                    {{ form.imgstyl_color }}#}
+                        {#                                                    {{ form.imgstyl_color.label }}#}
+                        {#                                                </div>#}
+                        {#                                            </div>#}
+                        {#                                            <div class="col-4">#}
+                        {#                                                <div class="custom-control custom-switch">#}
+                        {#                                                    {{ form.imgstyl_curve }}#}
+                        {#                                                    {{ form.imgstyl_curve.label }}#}
+                        {#                                                </div>#}
+                        {#                                            </div>#}
+                        {#                                            <div class="col-4">#}
+                        {#                                                <div class="custom-control custom-switch">#}
+                        {#                                                    {{ form.imgstyl_denoise }}#}
+                        {#                                                    {{ form.imgstyl_denoise.label }}#}
+                        {#                                                </div>#}
+                        {#                                            </div>#}
+                        {#                                        </div>#}
+                        {##}
+                        {#                                    </div>#}
+                        {#                                </div>#}
+                        {##}
+                        {##}
+                        {#                            </div>#}
+                        {#                        </div>#}
+                        {% if request.user.profile.is_network_rendering_allowed %}
+                        <div class="alert alert-info" role="alert">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Animation Frame List will be ignored using this method<br>
+                            <i class="fas fa-exclamation-triangle"></i>
+                            First frame is always set to frame zero<br>
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Last frame is where the end frame of the KeyShot time slider is set to<br>
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Distributed jobs are non-suspendable<br><br>
+                            <div class="form-group row">
+                                <div class="col-12">
+                                    <div class="custom-control custom-switch">
+                                        {{ form.use_network_rendering }}
+                                        {{ form.use_network_rendering.label }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <div class="submit_btn">
+                            <div class="row">
+                                <div class="col-12">
+                                    <button type="submit" name="submit-action" value="publish"
+                                            class="btn btn-success w-50 submit_publish">Publish
+                                    </button>
+                                    <button type="submit" name="submit-action" value="publish-continue"
+                                            class="btn btn-primary w-50 submit_continue">Publish and Continue
+                                        Submitting
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="HelpModal" tabindex="-1" aria-labelledby="HelpModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="HelpModalLabel">Frame Formatting</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <h4>Specifying Individual Frames or a Sequence</h4>
+                    <p>You can specify a single frame just by
+                        typing in the frame number:</p>
+
+                    <pre>5</pre>
+
+                    <p>You can specify individual frames by
+                        separating each frame with a comma or a space:</p>
+
+                    <pre>5,10,15,20</pre>
+
+                    <p>You can specify a frame range by
+                        separating the start and end frame with a dash or a colon:</p>
+
+                    <pre>1-100</pre>
+
+                    <h4>Specifying a Sequence with a Step Frame</h4>
+
+                    <p>You can specify a step frame for a
+                        sequence using x :</p>
+
+                    <pre>1-100x5</pre>
+
+                    <p>This example will render every 5th frame
+                        between 1 and 100 (1, 6, 11, 16, etc).</p>
+                    <div class="alert alert-warning" role="alert">
+                        Note: Individual frames are NEVER repeated in a Job. So, declaring a frame list of 5,5,5 - will
+                        NOT render frame 5 a total of 3 times, but rather just once.
+                    </div>
+                    <br><br>
+                    <div class="alert alert-success" role="alert">
+                        <h4>Advanced Frame List</h4>
+                        <p>To render frames 5, 18, and then from 28
+                            to 100, you can specify one of the following:</p>
+
+                        <pre>5,18,28-100</pre>
+
+                        <p>To render every 5th frame between 1 to
+                            100, then fill in the rest, you can specify one of the following:</p>
+
+                        <pre>1-100x5,1-100</pre>
+
+                        <p>To render every 10th frame between 1 to
+                            100, then every 5th frame, then every 2nd frame, then fill in the rest, you can specify one
+                            of
+                            the following:</p>
+
+                        <pre>1-100x10,1-100x5,1-100x2,1-100</pre>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="RenderEngineModal" tabindex="-1" aria-labelledby="RenderEngineModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="RenderEngineModalLabel">Render Engine</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <h4>Render Engine Help!</h4>
+                    <p>Product Mode should be selected when "Product Mode" is selected in KeyShot rendering technique.</p>
+                    <p>Interior Mode should be selected when "Interior Mode" is selected in KeyShot rendering technique.</p>
+
+                    <br><br>
+                    <div class="alert alert-warning" role="alert">
+                        <p>Product and Interior mode is provided on both GPU and CPU modes so make sure you are selecting the correct engine.</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
+{% block page_scripts %}
+    <script>
+        $(document).ready(function () {
+            $("#id_multi_studios").select2({tags: true});
+            $("#id_multi_cameras").select2({tags: true});
+            $("#id_multi_model_sets").select2({tags: true});
+            $("#id_multi_environments").select2({tags: true});
+            $("#id_multi_image_styles").select2({tags: true});
+            $("#id_mtl_multi_material_name").select2();
+            $("#id_env_lighting_environment").select2();
+            $("#id_env_backplate_image").select2();
+            $("#id_lighting_preset").select2({tags: true});
+
+
+            $("#max-samples-tab").click(function () {
+                $('#id_active_quality_mode').val(2);
+            });
+
+            $("#custom-samples-tab").click(function () {
+                $('#id_active_quality_mode').val(0);
+            });
+
+
+            let quality_tabs = {
+                2: $('#quality-tab a[href="#max-samples"]'),
+                1: $('#quality-tab a[href="#max-samples"]'),
+                0: $('#quality-tab a[href="#custom-samples"]')
+            };
+            quality_tabs['{{form.active_quality_mode.value}}'].tab('show')
+
+            $("#still-tab").click(function () {
+                $('#id_active_render_mode').val(0);
+            });
+
+            $("#animation-tab").click(function () {
+                $('#id_active_render_mode').val(1);
+            });
+
+            $("#xr-tab").click(function () {
+                $('#id_active_render_mode').val(2);
+            });
+
+            $("#configurator-tab").click(function () {
+                $('#id_active_render_mode').val(3);
+            });
+
+            $("#multimaterial-tab").click(function () {
+                $('#id_active_render_mode').val(4);
+            });
+
+            let render_mode_tabs = {
+                1: $('#render-mode-tab a[href="#animation"]'),
+                0: $('#render-mode-tab a[href="#still"]')
+            };
+            render_mode_tabs['{{form.active_render_mode.value}}'].tab('show')
+
+            $("#studios-tab").click(function () {
+                $('#id_active_multi_task_mode').val(0);
+            });
+            $("#cameras-tab").click(function () {
+                $('#id_active_multi_task_mode').val(1);
+            });
+            $("#model_sets-tab").click(function () {
+                $('#id_active_multi_task_mode').val(2);
+            });
+            $("#image_styles-tab").click(function () {
+                $('#id_active_multi_task_mode').val(3);
+            });
+            $("#environments-tab").click(function () {
+                $('#id_active_multi_task_mode').val(4);
+            });
+            let multi_mode_tabs = {
+                4: $('#multi-mode-tab a[href="#environments"]'),
+                3: $('#multi-mode-tab a[href="#image_styles"]'),
+                2: $('#multi-mode-tab a[href="#model_sets"]'),
+                1: $('#multi-mode-tab a[href="#cameras"]'),
+                0: $('#multi-mode-tab a[href="#studios"]')
+            };
+            multi_mode_tabs['{{form.active_multi_task_mode.value}}'].tab('show')
+
+        });
+    </script>
+{% endblock page_scripts %}

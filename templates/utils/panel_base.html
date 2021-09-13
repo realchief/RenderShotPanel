@@ -1,0 +1,104 @@
+{% load gravatar %}
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Panel - Dashboard</title>
+    <link rel="icon" href="{% static "system/favicon/favico.ico" %}" type="image/gif" sizes="16x16">
+    <link rel="stylesheet" href="{% static "system/css/bootstrap/bootstrap.min.css" %}">
+    <link rel="stylesheet" href="{% static "system/css/pace-theme-default.min.css" %}">
+    <link rel="stylesheet" href="{% static "system/css/pace-theme-flash.css" %}">
+    <link rel="stylesheet" href="{% static "system/fonts/fontawesome/all.min.css" %}">
+    <link rel="stylesheet" href="{% static "system/css/chart.css" %}">
+    <link rel="stylesheet" href="{% static "system/css/chart.min.css" %}">
+{% block page_head %}{# Specific template head here #}{% endblock page_head%}
+    <link rel="stylesheet" href="{% static "system/css/main.css" %}">
+    <link rel="stylesheet" href="{% static "system/css/responsive/responsive-max-480.css" %}">
+    <link rel="stylesheet" href="{% static "system/css/responsive/responsive-480-767.css" %}">
+    <link rel="stylesheet" href="{% static "system/css/responsive/responsive-768-991.css" %}">
+    <link rel="stylesheet" href="{% static "system/css/responsive/responsive-992-1199.css" %}">
+</head>
+<body class="internal_pages">
+<div class="top_menu">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-6 col-lg-8 col-xl-9">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse"
+                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item {% if 'dashboard' in request.path %}active{% endif %}" >
+                                <a class="nav-link" href="{% url 'dashboard' %}"><i class="icon icon_dashboard"></i>Dashboard</a>
+                            </li>
+                            <li class="nav-item {% if 'job_list' in request.path %}active{% endif %}">
+                                <a class="nav-link" href="{% url 'job_list' %}"><i class="icon icon_jobs"></i>Jobs List</a>
+                            </li>
+                            <li class="nav-item {% if 'payment' in request.path %}active{% endif %}">
+                                <a class="nav-link" href="{% url 'payment' %}"><i class="icon icon_payment"></i>Payment</a>
+                            </li>
+                            <li class="nav-item {% if 'tickets' in request.path %}active{% endif %}">
+                                <a class="nav-link" href="{% url 'tickets' %}"><i class="icon icon_support"></i>Support Ticket</a>
+                            </li>
+                            <li class="nav-item {% if 'profile' in request.path %}active{% endif %}">
+                                <a class="nav-link" href="{% url 'profile' %}"><i class="icon icon_settings"></i>Account
+                                    Setting</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                <div class="user_action">
+                    <div class="logout">
+                        <a href="{% url 'logout' %}" class="btn btn-light" data-toggle="tooltip" data-placement="bottom"
+                           title="Logout"><i class="fas fa-sign-out-alt"></i></a>
+                    </div>
+
+                    <div class="user_info">
+                        <div class="user_avatar">
+                            <img src={% gravatar user.email 40 %} alt="Avatar">
+                        </div>
+                        <div class="user_details">
+                            <h3>Welcome {{ user.username }}</h3>
+                            <span class="badge badge-success">Credit: $ {{ user.profile.balance|floatformat }}</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% block content %}{% endblock %}
+{% block page_modals %}{# Specific template scripts here #}{% endblock page_modals%}
+<div class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <p>© 2021 RenderShot RenderFarm Service, All Rights Reserved.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static "system/js/libs/jquery.min.js" %}"></script>
+<script src="{% static 'system/js/libs/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'system/js/libs/infinite.min.js' %}"></script>
+<script src="{% static "system/js/bootstrap/bootstrap.bundle.min.js" %}"></script>
+<script src="{% static "system/js/fontawesome/all.min.js" %}"></script>
+<script src="{% static "system/js/libs/highcharts.js" %}"></script>
+<script src="{% static "system/js/libs/chart.bundle.min.js" %}"></script>
+<script src="{% static "system/js/libs/select2.min.js" %}"></script>
+<script src="{% static "system/js/main.js" %}"></script>
+
+{% block page_scripts %}{# Specific template scripts here #}{% endblock page_scripts%}
+</body>
+</html>

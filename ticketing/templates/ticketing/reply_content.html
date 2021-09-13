@@ -1,0 +1,159 @@
+{% load static %}
+{% if selected_ticket.ticketreply_set.all %}
+    <div class="tab-content" id="v-pills-tabContent">
+        <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel"
+             aria-labelledby="v-pills-home-tab">
+            <div class="row">
+                <div class="col-12 col-md-12 col-lg-9 col-xl-9">
+                    <div class="ticket_content">
+                        <div class="head">
+                            <h4>{{ selected_ticket.subject }}</h4>
+                            <a class="btn btn-primary" data-toggle="collapse"
+                               href="#answer" role="button" aria-expanded="false"
+                               aria-controls="answer">Answer</a>
+                        </div>
+                        <div class="ticket_conversation">
+                            <div class="collapse" id="answer">
+                                <div class="box">
+                                    <div class="box_content">
+                                        <form method="post" enctype="multipart/form-data">
+                                            {% csrf_token %}
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <input type="hidden" name="ticket_number" value={{ selected_ticket.number }}>
+                                                    <div class="form-group">
+                                                        {{ ticket_form.body}}
+                                                    </div>
+                                                    <div class="input-group mb-3">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+                                                        </div>
+                                                        <div class="custom-file">
+                                                            {{ ticket_form.attachment }}
+                                                            <label class="custom-file-label" for="inputGroupFile01">Choose
+                                                                file</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group mt-2">
+                                                        <button type="submit" class="btn btn-primary">
+                                                            Submit Answer
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="conversation">
+                                {% for reply in selected_ticket.ticketreply_set.all %}
+                                    {% if reply.author.is_superuser %}
+                                        <div class="box stuff">
+                                    {% else %}
+                                        <div class="box">
+                                    {% endif %}
+                                <div class="box_content">
+                                    <div class="row">
+                                        <div class="col-12 col-md-9 col-lg-9 col-xl-9">
+                                            {{ reply.body|linebreaks|urlize }}
+                                            {% if reply.ticketattachment_set.all %}
+                                                {% for file in reply.ticketattachment_set.all %}
+                                                    <a href={{ file.attachment.url }} class="attachment" target="_blank">{{ file.attachment.name }}</a>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-12 col-md-3 col-lg-3 col-xl-3">
+                                            <span>{{ reply.author.username }}</span>
+                                            <span>{{ reply.date_modified }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+                                {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-12 col-lg-3 col-xl-3">
+                        <div class="ticket_details">
+                            <ul>
+                                <li>
+                                    <i class="far fa-calendar-check"></i>
+                                    <strong>Ticket Number:</strong>
+                                    <span>{{ selected_ticket.number }}</span>
+                                </li>
+                                <li>
+                                    <i class="fab fa-creative-commons-nd"></i>
+                                    <strong>Department:</strong>
+                                    <span>{{ selected_ticket.get_department_display }}</span>
+                                </li>
+                                <li>
+                                    <i class="far fa-clock"></i>
+                                    <strong>Submitted:</strong>
+                                    <span>{{ selected_ticket.date_created }}</span>
+                                </li>
+                                <li>
+                                    <i class="fas fa-history"></i>
+                                    <strong>Last Updated:</strong>
+                                    <span>{{ selected_ticket.date_modified }}</span>
+                                </li>
+                                <li>
+                                    <i class="far fa-flag"></i>
+                                    <strong>Status:</strong>
+                                    <div class="t_stat ticket_{{ selected_ticket.status }}">{{ selected_ticket.get_status_display }}</div>
+                                </li>
+                                <a href="{% url 'tickets' %}?ticket_number={{ selected_ticket.number }}&close=True" class="btn btn-danger">Close Ticket</a>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="tab-pane fade" id="v-pills-profile" role="tabpanel"
+                 aria-labelledby="v-pills-profile-tab">
+
+                <div class="row">
+                    <div class="col-10">
+                        profile
+                    </div>
+                    <div class="col-2">
+                        profile Details
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="v-pills-messages" role="tabpanel"
+                 aria-labelledby="v-pills-messages-tab">
+
+                <div class="row">
+                    <div class="col-10">
+                        messages
+                    </div>
+                    <div class="col-2">
+                        messages Details
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="v-pills-settings" role="tabpanel"
+                 aria-labelledby="v-pills-settings-tab">
+
+                <div class="row">
+                    <div class="col-10">
+                        settings
+                    </div>
+                    <div class="col-2">
+                        settings Details
+                    </div>
+                </div>
+            </div>
+        </div>
+{% else %}
+        <div class="row justify-content-center">
+            <div class="ticket_empty_content">
+                <img src="{% static "system/img/ticket_empty_imgage.svg" %}" alt="Do you have a question?">
+                <h3>Do you have a question?</h3>
+                <p>If you see a problem in our services or if you have any questions, you can contact the experts of
+                    the support unit by filling out the form below.</p>
+                <a href="{% url 'new_ticket' %}" class="btn btn-primary">Submit Ticket</a>
+            </div>
+        </div>
+{% endif %}

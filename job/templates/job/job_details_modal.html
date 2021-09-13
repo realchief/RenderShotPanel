@@ -1,0 +1,113 @@
+{% load static %}
+<div class="modal fade" id="job_details_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal_title">
+                    <h5 class="modal-title">Job Details</h5>
+                    <span>{{ job.name }}</span>
+                </div>
+                <div class="modal_title_options">
+                    <img src="{% static "system/img/job_cost.svg" %}" alt="Job Cost">
+                    <strong>Total Job Cost:</strong>
+                    <span>{{ job.cost|floatformat:3 }} USD</span>
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="default_row">
+                    <div class="frame_logs">
+                        <table class="table table-striped table-dark">
+                            <thead>
+                            <tr>
+                                <th scope="col">Frame</th>
+                                <th scope="col">Render Time (Minute)</th>
+                                <th scope="col">Cost</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for task in tasks %}
+                            <tr>
+                                <td scope="row">{{ task.frame_list_display }}</td>
+                                <td>{{ task.render_time_string}}</td>
+                                <td class="frame_cost">{{ task.cost|floatformat:3 }} USD</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="job_options default_row mt-4">
+                    <div class="rs_table">
+                        <div class="table-responsive-xl">
+                            <table class="table table-hover">
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <strong>Job Name:</strong>
+                                        <span class="float-right">{{ job.name }}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Submitted On:</strong>
+                                        <span class="float-right">{{ job.date_created }}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Render Plan:</strong>
+                                        <span class="float-right">{{ job.render_plan.display_name }}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>{{ job.software_version.software.name }} Version:</strong>
+                                        <span class="float-right">{{ job.software_version.version }}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Output Format:</strong>
+                                        <span class="float-right">{{ job.output_format_display }}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Image Width:</strong>
+                                        <span class="float-right">{{ job.image_width }}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Image Height:</strong>
+                                        <span class="float-right">{{ job.image_height }}</span>
+                                    </td>
+                                </tr>
+                                {% if job.cameras %}
+                                <tr>
+                                    <td>
+                                        <strong>Camera/s:</strong>
+                                        <span class="float-right">{{ job.cameras }}</span>
+                                    </td>
+                                </tr>
+                                {% endif %}
+                                {% if job.render_engine %}
+                                    <tr>
+                                        <td>
+                                            <strong>Render Engine:</strong>
+                                            <span class="float-right">{{ job.render_engine }}</span>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

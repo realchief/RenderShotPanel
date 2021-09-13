@@ -1,0 +1,21 @@
+<div class="content" id="cost_content">
+    {% if errors %}
+        <ul>
+        {% for error in errors %}
+            <li>
+                <strong>Error:</strong>
+                <p>{{ error }}</p>
+            </li>
+        {%  endfor %}
+        </ul>
+    {% else %}
+        <ul>
+            {% for render_plan, cost in calculate_data.items %}
+                <li>
+                    <strong>{{ render_plan }} Plan: </strong>
+                    <p>Estimated Cost : {{ cost|floatformat }} USD</p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>

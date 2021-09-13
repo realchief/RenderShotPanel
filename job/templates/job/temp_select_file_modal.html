@@ -1,0 +1,133 @@
+{% load static %}
+<div class="modal fade file_browser" id="select_file_modal" tabindex="-1" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal_title">
+                    <h5 class="modal-title"><img src="{% static "system/img/icons/rendershare.svg" %}"
+                                                 alt="RenderShare">RenderShare
+                        File Manager</h5>
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="default_row">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="file_location">
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="breadcrumb">
+                                            <li class="breadcrumb-item"><a href="#"><i class="fas fa-folder"></i>Project
+                                                Files:</a></li>
+                                            <li class="breadcrumb-item active" aria-current="page">Library</li>
+                                        </ol>
+                                        <div class="search-box">
+                                            <input type="text" class="search-txt" placeholder="Search ..."
+                                                   id="files_search">
+                                            <a class="search-btn">
+                                                <i class="fas fa-search"></i>
+                                            </a>
+                                        </div>
+                                    </nav>
+                                </div>
+                                <div class="alert alert-warning" role="alert">
+                                    Here are the naming conventions that needs to be taken into consideration :
+                                    <br>
+                                    <ul>
+                                        <li>Non English characters not allowed</li>
+                                        <li>The following list of special characters are not supported
+                                            #%:£¬?\/"<>|
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="default_row">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="rs_table">
+                                                <div class="table-responsive-xl">
+                                                    <div class="file_select_table">
+                                                        <table id="files_list_table" class="table table-hover">
+                                                            <thead>
+                                                            <tr>
+                                                                <th scope="col">File Name</th>
+                                                                <th scope="col">File Size</th>
+                                                                <th scope="col">Date/Time</th>
+                                                                <th scope="col">Action</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            {% for file in user_files %}
+                                                                {% if file.is_downloadable %}
+                                                                    <tr>
+                                                                        <td scope="row">{{ file.name }}</td>
+                                                                        <td>{{ file.size|filesizeformat }}</td>
+                                                                        <td>{{ file.client_modified }}</td>
+                                                                        <td>
+                                                                            <div class="custom-control custom-radio">
+                                                                                <input type="radio" id="{{ file.name }}"
+                                                                                       name='file_select'
+                                                                                       value="{{ file.path_display }}"
+                                                                                       class="custom-control-input file_select_radio">
+                                                                                <label class="custom-control-label"
+                                                                                       for="{{ file.name }}"></label>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                {% else %}
+                                                                    <tr style="background: #fddcdc">
+                                                                        <td scope="row">[Invalid File Name] {{ file.name }}</td>
+                                                                        <td>{{ file.size|filesizeformat }}</td>
+                                                                        <td>{{ file.client_modified }}</td>
+                                                                        <td>
+                                                                            <div class="custom-control custom-radio">
+                                                                                <input type="radio" id="{{ file.name }}"
+                                                                                       name='file_select'
+                                                                                       value="{{ file.path_display }}"
+                                                                                       class="custom-control-input file_select_radio"
+                                                                                       disabled>
+                                                                                <label class="custom-control-label"
+                                                                                       for="{{ file.name }}"></label>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="default_row">
+                                    <br>
+                                    <a href="#" class="btn btn-success w-100" data-dismiss="modal">Select File</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    // select file search script
+    $("#files_search").on("keyup", function () {
+        let value = $(this).val().toLowerCase();
+        $("#files_list_table tr").not(':first').filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
+    // set selected file path
+    $('.file_select_radio').click(function () {
+        $('#id_file_data').val(JSON.stringify({"relative_url": $(this).val()}));
+        $('.selected_file span').html($(this).attr('id'));
+    });
+</script>

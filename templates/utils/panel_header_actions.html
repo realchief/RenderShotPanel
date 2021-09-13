@@ -1,0 +1,13 @@
+<div class="actions_btn">
+    <div class="dropdown">
+        <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false"><i class="fas fa-plus"></i>
+            Submit Job
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+            <a href="{% url 'submit_job' %}" class="dropdown-item" type="button">Basic Submitter</a>
+            <a href="{% url 'submit_file_select' %}" class="dropdown-item" type="button">Advanced Submitter</a>
+        </div>
+    </div>
+    <a href="#" onclick="request_output_url(`{% url "job_output_url" %}`);" class="btn btn-info"><i class="fab fa-mixcloud"></i>File Center</a>
+</div>

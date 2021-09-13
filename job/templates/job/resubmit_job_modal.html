@@ -1,0 +1,42 @@
+{% load static %}
+<div class="modal fade" id="resubmit_job_modal" tabindex="-1" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal_title">
+                    <h5 class="modal-title">Re-submit Job</h5>
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="default_row">
+                    <div class="text-center">
+                        <img src="{% static "system/img/resubmit_icon.svg" %}" alt="Resubmit Job">
+                        <h5>{{ job.name }}</h5>
+                    </div>
+                    <form action="">
+                        <div class="form-group row">
+                            <label for="plan" class="col-12 col-form-label">Frame List
+                                <span id="pophover" class="form_help" data-container="body"
+                                      data-toggle="popover" data-placement="top"
+                                      data-content="Comma separated list of frame numbers and hyphen separated frame ranges are supported. examples : 1-10,25,5,100-150">
+                                                <i class="fas fa-question-circle"></i>
+                                            </span>
+                            </label>
+                            <div class="col-12 mt-2">
+                                <input class="form-control" type="text" id="resubmit_job_input"><br><br>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100" onclick="request_resubmit_job('{{ job.name }}');">Re-submit Job</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+$('#pophover').popover({trigger: "hover"});
+</script>

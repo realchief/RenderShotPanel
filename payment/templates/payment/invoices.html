@@ -1,0 +1,96 @@
+{% extends 'utils/panel_base.html' %}
+{% load static %}
+{% block content %}
+
+    <div class="header">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-8 col-xl-8">
+                    <div class="title">
+                        <img src="{% static "system/img/payment_tm.svg" %}">
+                        <h1>Payment</h1>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4 col-xl-4">
+                    {% include 'utils/panel_header_actions.html' %}
+                </div>
+            </div>
+        </div>
+        <div class="header_item">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <ul class="nav">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'payment' %}">Add Fund</a>
+                            </li>
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#">Invoices</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="content">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="rs_table">
+                        {% include 'utils/messages.html' %}
+                        <div class="table-responsive-xl">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th scope="col">Invoice id</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Transaction ID</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Type</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody class="infinite-container">
+                                {% for payment in payments %}
+                                    <tr class="infinite-item">
+                                        <td scope="row">Inv-{{ payment.payment_id|truncatechars:30 }}</td>
+                                        <td>{{ payment.date_created }}</td>
+                                        <td>{{ payment.payment_id|truncatechars:40 }}</td>
+                                        <td><strong>{{ payment.amount|floatformat  }} USD</strong></td>
+                                        <td><strong>{{ payment.get_type_display }}</strong></td>
+                                        <td><span class="i_stat invoice_{{ payment.status }}">{{ payment.get_status_display }}</span></td>
+                                        <td><a href="{% url 'generate_invoice' %}?payment_id={{ payment.payment_id }}" class="btn btn-light"><i class="fas fa-print"></i></a></td>
+                                    </tr>
+                                {% endfor %}
+                                <div class="table_footer text-center loading" style="display: none;">
+                                    <a href="">Loading More...</a>
+                                </div>
+                                {% if page_obj.has_next %}
+                                    <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}"></a>
+                                {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block page_scripts %}
+    <script>
+        let infinite = new Waypoint.Infinite({
+            element: $('.infinite-container')[0],
+            onBeforePageLoad: function () {
+                $('.loading').show();
+            },
+            onAfterPageLoad: function ($items) {
+                $('.loading').hide();
+            }
+        });
+    </script>
+{% endblock page_scripts %}

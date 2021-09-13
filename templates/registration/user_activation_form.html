@@ -1,0 +1,22 @@
+{% extends 'registration/registration_base.html' %}
+{% load static %}
+{% block content %}
+    <div class="row">
+        <div class="lr_head">
+            <img src="{% static "system/img/activation_icon.svg" %}" alt="Activate Your Account">
+            <div class="col-12">
+                <h1>Activate Your Account</h1>
+            </div>
+        </div>
+    </div>
+    <p>Your activation Link has been sent to your registered email address</p>
+    <form class="mt-4">
+        <div class="form-group mb-4">
+            <h5>Your Account: <span>{{ user.email }}</span></h5>
+        </div>
+        {% include 'utils/messages.html' %}
+        <div class="form-group">
+            <button type="submit" class="btn btn-warning w-100">Resend Activation Email</button>
+        </div>
+    </form>
+{% endblock content %}

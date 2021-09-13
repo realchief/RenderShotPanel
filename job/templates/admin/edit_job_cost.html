@@ -1,0 +1,19 @@
+<!-- This block will be included to django admin basic template -->
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+{% block extrahead %}{{ block.super }}
+    <script type="text/javascript" src="{% static "admin/js/vendor/jquery/jquery.js" %}"></script>
+    <script type="text/javascript" src="{% static "admin/js/jquery.init.js" %}"></script>
+{% endblock %}
+
+{% block content %}
+<form action="" method="post">
+    {% csrf_token %}
+    <p>The following job will be affected by this change:</p>
+    <ul>{{ items|unordered_list }}</ul>
+    {{ form.as_p }}
+    <input type="hidden" name="action" value="edit_cost" />
+    <input type="submit" name="apply" value="Apply" />
+
+</form>
+{% endblock %}

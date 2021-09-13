@@ -1,0 +1,107 @@
+{% extends 'utils/panel_base.html' %}
+{% load static %}
+{% block content %}
+    <div class="header">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-8 col-xl-8">
+                    <div class="title">
+                        <img src="{% static "system/img/support_tm.svg" %}" alt="Tickets">
+                        <h1>Support Ticket</h1>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4 col-xl-4">
+                    {% include 'utils/panel_header_actions.html' %}
+                </div>
+            </div>
+        </div>
+        <div class="header_item">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <ul class="nav">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'tickets' %}">Support Ticket</a>
+                            </li>
+                            <li class="nav-item new_ticket_nav active">
+                                <a class="nav-link" href="#"><i class="fas fa-ticket-alt"></i>Submit New Ticket</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content add_ticket">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    {% include 'utils/messages.html' %}
+                </div>
+                <div class="col-md-12">
+                    <div class="box">
+                        <div class="head">
+                            <div class="title">
+                                <h4>Submit New Ticket</h4>
+                            </div>
+                        </div>
+                        <div class="alert alert-warning" role="alert">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Support tickets will be answered within 10 minutes to 2 hours
+                        </div>
+                        <div class="box_content">
+                            <form method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="default_row">
+                                    <div class="row">
+                                        <div class="col-md-12 col-lg-6">
+                                            <div class="form-group">
+                                                {{ ticket_form.department }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 col-lg-6">
+                                            <div class="form-group">
+                                                {{ ticket_form.subject }}
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                {{ ticket_form.body }}
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+                                        </div>
+                                        <div class="custom-file">
+                                            {{ ticket_form.attachment }}
+                                            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="form-group mt-2">
+                                                <button type="submit" class="btn btn-primary">Submit Ticket</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block page_scripts %}
+    <script src="{% static "system/js/ticket/main.js" %}"></script>
+{% endblock page_scripts %}
+
+

@@ -1,0 +1,223 @@
+{% extends 'utils/panel_base.html' %}
+{% load static %}
+{% block content %}
+
+    <div class="header">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-8 col-xl-8">
+                    <div class="title">
+                        <img src="{% static 'system/img/payment_tm.svg' %}" alt="Payment">
+                        <h1>Payment</h1>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4 col-xl-4">
+                    {% include 'utils/panel_header_actions.html' %}
+                </div>
+            </div>
+        </div>
+        <div class="header_item">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <ul class="nav">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#">Add Fund</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'invoices' %}">Invoices</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="content">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-lg-9">
+                    {% include 'utils/messages.html' %}
+                    <div class="box add_fund">
+                        <form id="payment_form" method="post">
+                            {% csrf_token %}
+                            {{ payment_form.request_type }}
+                            <div class="accordion" id="accordionPayment">
+                                <div class="card">
+                                    <div class="card-header" id="headingMakePayment">
+                                        <h2 class="mb-0">
+                                            <button class="btn btn-link btn-block text-left" type="button"
+                                                    data-toggle="collapse" data-target="#collapseMakePayment"
+                                                    aria-expanded="true"
+                                                    aria-controls="collapseMakePayment">
+                                                <i class="make_payment_icon"></i>
+                                                <strong>Make Payment</strong>
+                                                <span>Select the desired amount and pay with PayPal portal</span>
+                                            </button>
+                                        </h2>
+                                    </div>
+                                    <div id="collapseMakePayment" class="collapse show"
+                                         aria-labelledby="headingMakePayment"
+                                         data-parent="#accordionPayment">
+                                        <div class="card-body">
+                                            {% if not user.profile.payment_allowed %}
+                                                <div class="alert alert-danger" role="alert">
+                                                    <div class="left_side">
+                                                        <i class="fas fa-exclamation-circle"></i>
+                                                        <strong>Information is not complete</strong>
+                                                        <span>Payment is not possible due to incomplete information. Please complete your information</span>
+                                                    </div>
+                                                    <div class="right_side">
+                                                        <a href="{% url 'profile' %}" class="btn btn-danger">Edit
+                                                            Profile</a>
+                                                    </div>
+                                                </div>
+                                            {% else %}
+                                                <p>To increase the amount, enter the desired amount and then make your
+                                                    payment
+                                                    online through PayPal payment portal</p>
+                                                <div class="form-group">
+                                                    <div class="input-group mb-3">
+                                                        {{ payment_form.payment_amount }}
+                                                        <div class="input-group-append">
+                                                            <span class="input-group-text"
+                                                                  id="basic-addon2">USD</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <small id="emailHelp"
+                                                                   class="form-text text-muted float-left">Minimum
+                                                                Deposit : ($30 USD)</small>
+                                                            <img src="{% static 'system/img/paypal.svg' %}"
+                                                                 class="float-right">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <a onclick="process_request('process_fund');" class="btn btn-primary">Add
+                                                    Funds</a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header" id="headingPromoPackage">
+                                        <h2 class="mb-0">
+                                            <button class="btn btn-link btn-block text-left collapsed" type="button"
+                                                    data-toggle="collapse" data-target="#collapsePromoPackage"
+                                                    aria-expanded="false"
+                                                    aria-controls="collapsePromoPackage">
+                                                <i class="promo_package_icon"></i>
+                                                <strong>Promotional Package</strong>
+                                                <span>Take advantage of more discounts by choosing packages</span>
+                                            </button>
+                                        </h2>
+                                    </div>
+                                    <div id="collapsePromoPackage" class="collapse"
+                                         aria-labelledby="headingPromoPackage"
+                                         data-parent="#accordionPayment">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                {% if not user.profile.payment_allowed %}
+                                                    <div class="alert alert-danger" role="alert">
+                                                        <div class="left_side">
+                                                            <i class="fas fa-exclamation-circle"></i>
+                                                            <strong>Information is not complete</strong>
+                                                            <span>Payment is not possible due to incomplete information. Please complete your information</span>
+                                                        </div>
+                                                        <div class="right_side">
+                                                            <a href="{% url 'profile' %}" class="btn btn-danger">Edit
+                                                                Profile</a>
+                                                        </div>
+                                                    </div>
+                                                {% else %}
+                                                    <p>Please select the promotional package you want and then pay for
+                                                        it</p>
+
+                                                    <div class="form-group mt-5">
+                                                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                                            {{ payment_form.promotion_package }}
+                                                        </div>
+                                                    </div>
+                                                    <a onclick="process_request('process_package');"
+                                                       class="btn btn-primary float-left">Buy Package</a>
+                                                    <img src="{% static 'system/img/paypal.svg' %}" class="float-right"/>
+                                                {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header" id="headingCouponCode">
+                                        <h2 class="mb-0">
+                                            <button class="btn btn-link btn-block text-left collapsed" type="button"
+                                                    data-toggle="collapse" data-target="#collapseCouponCode"
+                                                    aria-expanded="false"
+                                                    aria-controls="collapseCouponCode">
+                                                <i class="coupon_code_icon"></i>
+                                                <strong>Do you have a coupon code?</strong>
+                                                <span>Use the gift vouchers you have and get free credit</span>
+                                            </button>
+                                        </h2>
+                                    </div>
+                                    <div id="collapseCouponCode" class="collapse" aria-labelledby="headingCouponCode"
+                                         data-parent="#accordionPayment">
+                                        <div class="card-body">
+                                            <p>Please enter your coupon code to activate it</p>
+
+                                            <div class="alert alert-warning" role="alert">
+                                                <i class="fas fa-exclamation-triangle"></i>Notice that some coupons have
+                                                expiration dates and cannot be used indefinitely.
+                                            </div>
+                                            <div class="form-group">
+                                                {{ payment_form.coupon_code }}
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <a onclick="process_request('process_coupon');"
+                                                       class="btn btn-primary float-left">Redeem Coupon</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-3">
+                    <div class="result">
+                        <div class="credit">
+                            <img src="{% static 'system/img/user_credit.svg' %}">
+                            <h5>Current Balance</h5>
+                            <h1>{{ user.profile.balance|floatformat }} <span>$</span></h1>
+                        </div>
+                        <div class="user_info">
+                            <img src="{% static 'system/img/user_icon.svg' %}">
+                            <h4>Billing Address</h4>
+                            <ul>
+                                {% if user.profile.company_name %}<li>{{ user.profile.company_name }}</li>{% endif %}
+                                {% if user.first_name or user.last_name %}<li>{{ user.first_name }} {{ user.last_name }}</li>{% endif %}
+                                {% if user.profile.city %}<li>{{ user.profile.city }} {{ user.profile.get_country_display }}</li>{% endif %}
+                                {% if user.profile.zip_code %}<li>{{ user.profile.zip_code }}</li>{% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block page_scripts %}
+    <script>
+        function process_request(request_type) {
+            $("#request_type").val(request_type);
+            $("#payment_form").submit();
+        }
+
+    </script>
+{% endblock page_scripts %}

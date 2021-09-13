@@ -1,0 +1,58 @@
+{% extends 'registration/registration_base.html' %}
+{% load static %}
+{% block content %}
+    <div class="row">
+        <div class="lr_head">
+            <div class="col-12">
+                <h1>Login</h1>
+                <a href="https://www.rendershot.net"><i class="fas fa-chevron-left"></i>Back Home</a>
+            </div>
+        </div>
+    </div>
+    <h5>Login to your account</h5>
+    <p>Thank you for returning to RenderShot, log in to your user panel to access the features</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.captcha }}
+        <div class="form-group">
+            {{ form.username }}
+            {% if form.username.errors %}
+                <br>
+                <div class="alert alert-warning" role="alert">
+                    {{ form.username.errors }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <div class="input-group">
+                {{ form.password1 }}
+                <div class="input-group-append">
+                    <span class="input-group-text show_password"><i class="fas fa-eye"></i></span>
+                </div>
+            </div>
+            {% if form.password1.errors %}
+                <br>
+                <div class="alert alert-warning" role="alert">
+                    {{ form.password1.errors }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group remember_reset">
+            <div class="custom-control custom-checkbox">
+                {{ form.remember_me }}
+                <label class="custom-control-label" for="remember">Remember me</label>
+            </div>
+
+            <a href="{% url 'user_password_reset' %}">Reset Password?</a>
+
+        </div>
+        {% include 'utils/messages.html' %}
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary w-100">Sign in</button>
+        </div>
+        <a href="{% url 'register' %}" class="signup_link">Don't have an account? <span>Sign up</span></a>
+    </form>
+
+{% endblock content %}

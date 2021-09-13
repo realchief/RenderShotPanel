@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="97" height="97" viewBox="0 0 97 97">
+  <defs>
+    <linearGradient id="linear-gradient" y1="0.842" x2="0.864" y2="0.187" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#fff" stop-opacity="0.639"/>
+      <stop offset="1" stop-color="#fff"/>
+    </linearGradient>
+    <clipPath id="clip-logo">
+      <rect width="97" height="97"/>
+    </clipPath>
+  </defs>
+  <g id="logo" clip-path="url(#clip-logo)">
+    <rect width="97" height="97" fill="rgba(0,64,191,0)"/>
+    <g id="rendershot_logo" transform="translate(-16.183 -16)">
+      <path id="Path_77" data-name="Path 77" d="M6494.474,10424.653v21.3l-47.056,27.3a47.36,47.36,0,0,0,47.056,5.612c27.1-11.2,28.679-37.752,28.679-37.752Z" transform="translate(-6411.495 -10371.03)" fill="url(#linear-gradient)"/>
+      <path id="Path_79" data-name="Path 79" d="M46.91,0V21.3L0,48.509a46.935,46.935,0,0,0,46.91,5.7c27.1-11.2,28.68-37.752,28.68-37.752Z" transform="translate(88.058 45.068) rotate(120)" fill="url(#linear-gradient)"/>
+      <path id="Path_78" data-name="Path 78" d="M46.91,0V21.3L0,48.509a46.935,46.935,0,0,0,46.91,5.7c27.1-11.2,28.68-37.752,28.68-37.752Z" transform="translate(69.553 94.482) rotate(-120)" fill="url(#linear-gradient)"/>
+    </g>
+  </g>
+</svg>

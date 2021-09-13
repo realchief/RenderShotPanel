@@ -1,0 +1,177 @@
+{% extends 'utils/panel_base.html' %}
+{% load static %}
+{% load dbx_tags %}
+{% block content %}
+    <div class="header">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-8 col-xl-8">
+                    <div class="title">
+                        <img src="{% static "system/img/settings_tm.svg" %}" alt="Setting">
+                        <h1>Account Setting</h1>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4 col-xl-4">
+                    {% include 'utils/panel_header_actions.html' %}
+                </div>
+            </div>
+        </div>
+        <div class="header_item">
+            <div class="container">
+                <div class="row">
+                    <div class="col-6 col-md-6 col-lg-9 col-xl-9">
+                        <ul class="nav">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#">Edit Profile</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-6 col-md-6 col-lg-3 col-xl-3 text-right">
+                        <a href="{% url 'user_password_change' %}" class="change_password mt-2"><i class="fas fa-unlock-alt"></i>Change Password</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content profile">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    {% include 'utils/messages.html' %}
+                    <div class="box">
+                        <div class="head">
+                            <div class="title">
+                                <h4>Profile Information</h4>
+                            </div>
+                            <div class="profile_option">
+                                <a href="{% dbx_get_user_outputs_share_link user %}" class="btn btn-primary" target="_blank">
+                                    <i class="fab fa-dropbox"></i>
+                                    Auto Synchronize Dropbox Output Folder</a>
+                            </div>
+                            <p>Manage your profile information, security to make system works better for you</p>
+                        </div>
+                        <div class="box_content">
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="default_row">
+                                    <div class="section">
+                                        <div class="row">
+                                            <div class="col-md-12 col-lg-6">
+                                                <div class="form-group row">
+                                                    <label for="UserName"
+                                                           class="col-sm-4 col-form-label">User name</label>
+                                                    <div class="col-sm-8">
+                                                        {{ form.username }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="FirstName"
+                                                           class="col-sm-4 col-form-label">First name</label>
+                                                    <div class="col-sm-8">
+                                                        {{ form.first_name }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="EmailAddress" class="col-sm-4 col-form-label">Email
+                                                        address</label>
+                                                    <div class="col-sm-8">
+                                                        {{ form.email }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 col-lg-6">
+                                                <div class="form-group row">
+                                                    <label for="AccountType" class="col-sm-4 col-form-label">Account
+                                                        type</label>
+                                                    <div class="col-sm-8">
+                                                        {{ form.account_type }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="LastName"
+                                                           class="col-sm-4 col-form-label">Last name</label>
+                                                    <div class="col-sm-8">
+                                                        {{ form.last_name }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="Phone" class="col-sm-4 col-form-label">Phone number</label>
+                                                    <div class="col-sm-8">
+                                                        {{ form.phone }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="section">
+                                        <div class="row">
+                                            <div class="col-md-12 col-lg-6">
+                                                <div class="form-group row">
+                                                    <label for="Company" class="col-sm-4 col-form-label">Company name</label>
+                                                    <div class="col-sm-8">
+                                                        {{ form.company_name }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="Address" class="col-sm-4 col-form-label">Address</label>
+                                                    <div class="col-sm-8">
+                                                        {{ form.address }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="ZipCode" class="col-sm-4 col-form-label">Zip
+                                                        Code</label>
+                                                    <div class="col-sm-8">
+                                                        {{ form.zip_code }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 col-lg-6">
+                                                <div class="form-group row">
+                                                    <label for="Country" class="col-sm-4 col-form-label">Country</label>
+                                                    <div class="col-sm-8">
+                                                        {{ form.country }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="City" class="col-sm-4 col-form-label">City</label>
+                                                    <div class="col-sm-8">
+                                                        {{ form.city }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="VAT" class="col-sm-4 col-form-label">VAT</label>
+                                                    <div class="col-sm-8">
+                                                        {{ form.vat }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="section">
+                                        <div class="box_content">
+                                            <div class="row">
+                                                <div class="col-12 col-xl-4">
+                                                    <div class="form-group">
+                                                        <div class="custom-control custom-switch">
+                                                            {{ form.receive_job_email_notifs }}
+                                                            <label class="custom-control-label"
+                                                                   for="ChangePlanJobsAppNotification">Receive Job Email Notifications</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="foot">
+                                        <button type="submit" class="btn btn-primary w-100">Update Profile</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

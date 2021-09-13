@@ -1,0 +1,15 @@
+<label class="btn btn-outline-primary btn-lg active">
+<input type="{{ widget.type }}"
+       id="{{ widget.value.id }}"
+       name="{{ widget.name }}"
+       {% if widget.value != None %}value="{{ widget.value.instance.id|stringformat:'s' }}"{% endif %}
+       {% include "django/forms/widgets/attrs.html" %}>
+<i class="badge">Extra: % {{ widget.value.instance.extra|stringformat:'s' }}</i>
+<strong>{{ widget.value.instance.amount|stringformat:'s' }} USD</strong>
+<span>{{ widget.value.instance.name|stringformat:'s' }}</span>
+</label>
+
+
+{#{% if widget.wrap_label %}<label{% if widget.attrs.id %}#}
+{#    for="{{ widget.attrs.id }}"{% endif %}>{% endif %}{% include "django/forms/widgets/input.html" %}#}
+{#{% if widget.wrap_label %} {{ widget.label }}</label>{% endif %}#}

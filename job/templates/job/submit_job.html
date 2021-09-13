@@ -1,0 +1,276 @@
+{% extends 'utils/panel_base.html' %}
+{% load static %}
+{% block page_head %}
+    <link rel="stylesheet" href="{% static "system/css/select2.min.css" %}">
+{% endblock page_head %}
+{% block content %}
+    <div class="header">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-8 col-xl-8">
+                    <div class="title">
+                        <img src="{% static "system/img/jobs_tm.svg" %}" alt="Jobs">
+                        <h1>Submit Job</h1>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4 col-xl-4">
+                    {% include 'utils/panel_header_actions.html' %}
+                </div>
+            </div>
+        </div>
+        <div class="header_item">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <ul class="nav">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#">Submit Job</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="container">
+            <form method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-12 col-md-9 col-lg-9 col-xl-9">
+                        {% include 'utils/messages.html' %}
+                        <div class="box sj_step">
+                            <span class="step_number">1</span>
+                            <div class="head">
+                                <div class="title">
+                                    <h4>Select Software</h4>
+                                </div>
+                            </div>
+                            <div class="box_content">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <div class="form-group">
+                                            {{ form.software }}
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="form-group">
+                                            {{ form.version }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box sj_step">
+                            <span class="step_number">2</span>
+                            <div class="head">
+                                <div class="title">
+                                    <h4>Select File</h4>
+                                </div>
+                            </div>
+                            <div class="box_content">
+                                <div class="row">
+                                    <div class="col-12 col-md-8 col-lg-8 col-xl-8">
+                                        <div class="form-group">
+                                            {{ form.file_storage }}
+                                        </div>
+                                        <div class="selected_file">
+                                            <i class="fas fa-file-archive"></i>
+                                            <strong>Selected File:</strong>
+                                            <span>No File Selected</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-4 col-lg-4 col-xl-4">
+                                        <button id=file_select_button class="btn btn-success btn-lg w-100" type="button" >Choose Project File</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="setting_form">
+                            <div class="box sj_step setting">
+                                <span class="step_number">3</span>
+                                <div class="head">
+                                    <div class="title">
+                                        <h4>Render Setting</h4>
+                                    </div>
+                                </div>
+                                <div class="box_content">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            {{ form.file_path }}
+                                            {{ form.file_link }}
+                                            {{ form.file_id }}
+                                            {{ form.file_size }}
+                                            {{ form.file_name }}
+                                            <div class="form-group row">
+                                                <label for="plan"
+                                                       class="col-sm-3 col-form-label">{{ form.render_plan.label }}</label>
+                                                <div class="col-sm-9">
+                                                    {{ form.render_plan }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="output"
+                                                       class="col-sm-3 col-form-label">{{ form.output_format.label }}</label>
+                                                <div class="col-sm-9">
+                                                    {{ form.output_format }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="plan"
+                                                       class="col-sm-3 col-form-label">{{ form.frame_list.label }}
+                                                    <span id="pophover" class="form_help" data-container="body"
+                                                          data-toggle="popover" data-placement="top"
+                                                          data-content="Frame numbers and hyphen separated frame ranges are supported, press enter after adding a new item. examples : 1-10 or 25">
+                                                    <i class="fas fa-question-circle"></i>
+                                                </span>
+                                                </label>
+                                                <div class="col-sm-9">
+                                                    {{ form.frame_list }}
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group row">
+                                                <label for="plan" class="col-sm-3 col-form-label">Resolution</label>
+                                                <div class="col-sm-9">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            {{ form.image_width }}
+                                                        </div>
+                                                        <div class="col-6">
+                                                            {{ form.image_height }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label for="{{ form.quality_mode.label }}"
+                                                       class="col-sm-3 col-form-label">{{ form.quality_mode.label }}</label>
+                                                <div class="col-sm-9">
+                                                    {{ form.quality_mode }}
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row max_samples">
+                                                <label for="{{ form.max_samples.label }}"
+                                                       class="col-sm-3 col-form-label">{{ form.max_samples.label }}</label>
+                                                <div class="col-sm-9">
+
+                                                    {{ form.max_samples }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group row custom_samples">
+                                                <label for="{{ form.custom_samples.label }}"
+                                                       class="col-sm-3 col-form-label">{{ form.custom_samples.label }}</label>
+                                                <div class="col-sm-9">
+
+                                                    {{ form.custom_samples }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group row custom_samples">
+                                                <label for="{{ form.ray_bounces.label }}"
+                                                       class="col-sm-3 col-form-label">{{ form.ray_bounces.label }}</label>
+                                                <div class="col-sm-9">
+                                                    {{ form.ray_bounces }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group row custom_samples">
+                                                <label for="{{ form.anti_aliasing_quality.label }}"
+                                                       class="col-sm-3 col-form-label">{{ form.anti_aliasing_quality.label }}</label>
+                                                <div class="col-sm-9">
+                                                    {{ form.anti_aliasing_quality }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group row custom_samples">
+                                                <label for="{{ form.shadow_quality.label }}"
+                                                       class="col-sm-3 col-form-label">{{ form.shadow_quality.label }}</label>
+                                                <div class="col-sm-9">
+                                                    {{ form.shadow_quality }}
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label for="plan"
+                                                       class="col-sm-3 col-form-label">{{ form.educational.label }}</label>
+                                                <div class="col-sm-9">
+                                                    <div class="form-group">
+                                                        <div class="custom-control custom-switch">
+                                                            {{ form.educational }}
+                                                            <label class="custom-control-label"
+                                                                   for="educational"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="advanced_options">
+
+                                                <a class="btn btn-light w-100" data-toggle="collapse"
+                                                   href="#advanced_option"
+                                                   role="button" aria-expanded="false" aria-controls="collapseExample">
+                                                    <i class="fas fa-cog"></i>Advanced Options
+                                                </a>
+
+                                                <div class="collapse mt-4" id="advanced_option">
+                                                    <div class="form-group row">
+													
+													<div class="alert alert-warning" role="alert">
+                                                            Non-english characters and "#%:£¬?\/"<>|" are not allowed in camera name
+													</div>
+														
+                                                        <label for="plan"
+                                                               class="col-sm-3 col-form-label">{{ form.cameras.label }}</label>
+                                                        <div class="col-sm-9">
+                                                            <div class="form-group">
+                                                                {{ form.cameras }}
+                                                            </div>
+                                                            <div class="form-group">
+                                                                {{ form.test }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="foot">
+                                    <button type="submit" name="submit-action" value="publish" class="btn btn-success w-50 submit_publish" {% if user.profile.balance <= 0 %}disabled{% endif %}>Publish</button>
+                                    <button type="submit" name="submit-action" value="publish-continue" class="btn btn-primary w-50 submit_continue" {% if user.profile.balance <= 0 %}disabled{% endif %}>Publish and Continue Submitting</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-3 col-lg-3 col-xl-3">
+                        <a href="https://www.rendershot.net/calculator/" target="_blank" class="box calculator">
+                            <img src="{% static "system/img/calculator.png" %}">
+                            <h5>Estimate Project</h5>
+                            <p>Online Project Cost Estimator</p>
+                        </a>
+                        {% include "utils/rendershare_download.html" %}
+                        {% include "utils/quick_links.html" %}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Select File Modal -->
+    <div class="modal fade file_browser" id="select_file_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    </div>
+{% endblock content %}
+{% block page_scripts %}
+    <script src="{% static "system/js/libs/reconnecting-websocket.min.js" %}"></script>
+    <script src="{% static "system/js/job/submit_form.js" %}"></script>
+    <script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key="lgz8gg4oqg4v5nd"></script>
+{% endblock page_scripts %}
+

@@ -1,0 +1,225 @@
+@media (max-width: 479px) {
+
+    .lr-container {
+        width: 100% !important;
+    }
+
+    .mini_wrapper {
+        display: block;
+    }
+
+    .mini_wrapper .brand {
+        float: left;
+        width: 100%;
+        padding: 20px;
+        height: auto;
+        display: block;
+        text-align: center;
+    }
+
+    .mini_wrapper .form {
+        float: left;
+        width: 100%;
+        height: auto;
+        padding: 20px;
+        display: block;
+    }
+
+    .brand_box {
+        width: 100%;
+    }
+
+    .brand_box img {
+        width: 50px;
+    }
+
+    .brand_box h2,
+    .brand_box h3 {
+        display: none;
+    }
+
+    /** Pages - Profile **/
+    .top_menu .logo {
+        padding: 6px 9px;
+        height: auto;
+        border-radius: 5px;
+    }
+
+    .top_menu .logo img {
+        width: 30px;
+    }
+
+    .top_menu_btn .btn {
+        width: 48%;
+    }
+
+    .top_menu {
+        padding: 15px 0;
+    }
+	
+	.header {
+        padding-top: 20px;
+    }
+
+    .header .title {
+        text-align: center;
+    }
+
+    .header .title img {
+        display: none;
+    }
+
+    .header .title h1 {
+        font-size: 25px;
+    }
+
+    .top_menu .active::before {
+        display: none;
+    }
+
+    .navbar-toggler{
+        width: 100%;
+    }
+	
+    .navbar-toggler:focus,
+    .navbar-toggler:hover {
+        outline: none;
+    }
+
+    .navbar-toggler-icon {
+        width: 22px;
+    }
+
+    .box_content .btn {
+        width: 100%;
+    }
+
+    .form-group {
+        margin-bottom: 10px;
+    }
+
+    /** Dashboard **/
+    .page_content {
+        margin-top: 20px;
+    }
+
+    .user_status .credit {
+        width: 100%;
+    }
+
+    .user_status .status {
+        width: 100%;
+    }
+
+    .user_status .status ul li {
+        width: 49%;
+        display: inline-table;
+    }
+
+    .job_box {
+        width: 50% !important;
+		height: 270px;
+    }
+
+	.user_action {
+		text-align: left;
+		float: left;
+	}
+	
+	.page_content {
+		margin-top: 20px;
+	}
+	
+	
+	.user .user_status .credit {
+		width: 100%;
+	}
+
+	.user .user_status .status {
+		width: 100%;
+	}
+	
+	
+	.user .user_status .status ul li img {
+		display: none;
+	}
+
+	.actions_btn {
+		text-align: center;
+		margin-top: 10px;
+	}
+	
+	.header .header_item {
+		padding-bottom: 10px;
+	}
+
+	.jl_item .search-box {
+		left: 0;
+		right: auto;
+		width: auto;
+	}
+	
+	
+	.profile .box .head .profile_option {
+		float: left;
+		padding-top: 5px;
+		width: 100%;
+		margin-bottom: 15px;
+	}
+	
+	.profile .box .head .profile_option a{
+		width: 100%;
+	}
+
+	.selected_file{
+		width: 100%;
+		margin-bottom: 15px;
+	}
+	
+	.step_number{
+		display: none;
+	}
+	
+	.add_fund .btn-primary{
+		width: 100%;
+		margin-bottom: 20px;
+		margin-top: 12px;
+	}	
+	
+	.add_fund .btn-group-toggle .btn-outline-primary{
+		width: 100%;
+		margin-bottom: 25px;
+	}
+	
+	.add_fund .btn-group,
+	.add_fund .btn-group-vertical{
+		display: block;
+	}
+	
+	.add_fund .card-body img{
+		float: none !important;
+		text-align: center;
+		display: inline-block;
+		margin-top: 20px;
+	}
+	
+	.add_fund .card-header i{
+		display: none;
+	}
+	
+	.user .user_info{
+		text-align: center;
+	}
+	
+	.user .user_avatar {
+		float: none;
+		display: inline-block;
+		margin-right: 0;
+	}
+	
+	.user .user_details {
+		float: none;
+		display: block;
+	}
+
+}

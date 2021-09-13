@@ -1,0 +1,1 @@
+web: gunicorn rendershot_django.wsgi

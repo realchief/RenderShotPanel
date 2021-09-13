@@ -1,0 +1,45 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Panel - Login</title>
+    <link rel="stylesheet" href="{% static "system/css/bootstrap/bootstrap.min.css" %}">
+    <link rel="stylesheet" href="{% static "system/css/pace-theme-default.min.css" %}">
+    <link rel="stylesheet" href="{% static "system/css/pace-theme-flash.css" %}">
+    <link rel="stylesheet" href="{% static "system/fonts/fontawesome/all.min.css" %}">
+    <link rel="stylesheet" href="{% static "system/css/main.css" %}">
+    <link rel="stylesheet" href="{% static "system/css/responsive/responsive-max-480.css" %}">
+    <link rel="stylesheet" href="{% static "system/css/responsive/responsive-480-767.css" %}">
+    <link rel="stylesheet" href="{% static "system/css/responsive/responsive-768-991.css" %}">
+    <link rel="stylesheet" href="{% static "system/css/responsive/responsive-992-1199.css" %}">
+</head>
+<body>
+<div class="mini_wrapper">
+    <div class="brand">
+        <div class="brand_box">
+            <img src="{% static "system/img/logo.svg" %}" alt="RenderShot">
+            <h2>RenderShot</h2>
+            <h3>First Keyshot Cloud Rendering Solution</h3>
+        </div>
+    </div>
+    <div class="form">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-md-12 col-lg-12 col-xl-6">
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{% static "system/js/libs/jquery.min.js" %}"></script>
+<script src="{% static "system/js/bootstrap/bootstrap.bundle.min.js" %}"></script>
+<script src="{% static "system/js/libs/pace.min.js" %}"></script>
+<script src="{% static "system/js/fontawesome/all.min.js" %}"></script>
+<script src="{% static "system/js/main.js" %}"></script>
+</body>
+</html>

@@ -1,0 +1,198 @@
+{% extends 'utils/panel_base.html' %}
+{% load static %}
+{% load gravatar %}
+{% load dbx_tags %}
+{% block content %}
+    <div class="default_row page_content">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-lg-9">
+                    <div class="user">
+                        <div class="user_info">
+                            <div class="user_avatar">
+                                <img src={% gravatar user.email 40 %} alt="Avatar">
+                            </div>
+                            <div class="user_details">
+                                <h3>Welcome<span>[ {{ user.username }} ]</span></h3>
+                                <span class="badge badge-light">{{ user.profile.get_account_type_display }}</span>
+                                {% if not user.profile.rate_multiplier %}
+                                <span id="free_service" class="badge badge-warning" data-container="body"
+                                   data-toggle="popover"
+                                   data-placement="top" trigger="hover"
+                                   data-content="Unlimited rendering service is activated on your account.">Unlimited Rendering Activated</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="user_status">
+                            <div class="credit">
+                                <img src="{% static "system/img/credit.svg" %}" alt="credit">
+                                <div class="money">
+                                    <h3>$ {{ user.profile.balance|floatformat }}</h3>
+                                    <span>Your Balance</span>
+                                </div>
+                                <a href="{% url 'payment' %}" class="btn btn-success" data-toggle="tooltip"
+                                   data-placement="top"
+                                   title="Add Credit"><i class="fas fa-plus"></i></a>
+                            </div>
+                            <div class="status">
+                                <ul>
+
+                                    <li>
+                                        <img src="{% static "system/img/status_jobs.svg" %}" alt="job_status">
+                                        <h3>{{ user.profile.job_count }}</h3>
+                                        <span>Render Jobs</span>
+                                    </li>
+
+                                    <li>
+                                        <img src="{% static "system/img/status_payments.svg" %}" alt="payment_status">
+                                        <h3>$ {{ user.profile.total_payment|floatformat }}  </h3>
+                                        <span>Payments</span>
+                                    </li>
+
+                                    <li>
+                                        <img src="{% static "system/img/status_invoices.svg" %}" alt="invoices">
+                                        <h3>{{ user.profile.payment_count }}</h3>
+                                        <span>Invoices</span>
+                                    </li>
+
+                                    <li>
+                                        <img src="{% static "system/img/status_tickets.svg" %}" alt="tickets">
+                                        <h3>{{ user.profile.ticket_count }}</h3>
+                                        <span>Support Ticket</span>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="statistic">
+                        <div class="box">
+                            <div class="head">
+                                <div class="title">
+                                    <h4>Render Statistics</h4>
+                                </div>
+                            </div>
+                            <div class="box_content">
+                                <div class="chart">
+                                    <div id="chart" data-url="{% url 'get_account_chart' %}"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="last_jobs">
+                        <div class="box">
+                            <div class="head">
+                                <div class="title">
+                                    <h4>Latest Jobs</h4>
+                                </div>
+                                <div class="options">
+                                    <a href="{% url 'job_list' %}" class="btn btn-link">View All</a>
+                                </div>
+                            </div>
+                            <div class="box_content">
+                                {% if latest_jobs %}
+                                    <ul class="jobs">
+                                        {% for job in latest_jobs|slice:":4" %}
+                                        <li class="job_box" style="width: 25%">
+                                            <div class="software_logo">
+                                                <span class="version version_green">{{ job.software_version.version }}</span>
+                                                <img src="{{ job.software_version.icon.url }}" alt="software_logo">
+                                            </div>
+                                            <h5>{{ job.name|truncatechars:20 }}</h5>
+                                            <strong class="plan">{{ job.render_plan.display_name }}</strong>
+                                            <strong class="cost">{{ job.cost|floatformat }} USD</strong>
+                                            <span class="j_stat job_{{ job.status.name }}">{{ job.status.display_name }}</span>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    <div class="empty_list dashboard_empty_list">
+										<img src="{% static 'system/img/job_empty.svg' %}" alt="EmptyList">
+										<span>No Job Record Found</span>
+									</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="last_tickets">
+                        <div class="box">
+                            <div class="head">
+                                <div class="title">
+                                    <h4>Last Updated Tickets</h4>
+                                </div>
+                                <div class="options">
+                                    <a href="{% url 'tickets' %}" class="btn btn-link">View All</a>
+                                </div>
+                            </div>
+                            <div class="box_content">
+                                {% if latest_tickets %}
+                                    <div class="table-responsive-xl">
+                                        <table class="table table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">Ticket ID</th>
+                                                <th scope="col">Subject</th>
+                                                <th scope="col">Updated</th>
+                                                <th scope="col">Status</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for ticket in latest_tickets|slice:":5" %}
+                                                    <tr>
+                                                        <th scope="row">{{ ticket.number }}</th>
+                                                        <td><a href="{% url 'tickets' %}?ticket_number={{ ticket.number }}">{{ ticket.subject|truncatechars:20 }}</a></td>
+                                                        <td>{{ ticket.date_modified }}</td>
+                                                        <td>
+                                                            <div class="t_stat ticket_{{ ticket.status }}">{{ ticket.get_status_display }}</div>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                {% else %}
+                                    <div class="empty_list dashboard_empty_list">
+										<img src="{% static 'system/img/ticket.svg' %}" alt="EmptyList">
+										<span>No Ticket Record Found</span>
+									</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-12 col-lg-3">
+                    <div class="dashboard_actions">
+                        {% include 'utils/panel_header_actions.html' %}
+                    </div>
+                    <div class="box">
+                        <div class="head">
+                            <div class="title">
+                                <h4>Job Status Overview</h4>
+                            </div>
+                        </div>
+                        <div class="box_content">
+                            <canvas id="job_chart" data-url="{% url 'get_job_chart' %}" width="180" height="180"></canvas>
+                        </div>
+                    </div>
+                    {% include "utils/rendershare_download.html" %}
+                    {% for package in payment_packages %}
+                        {% if package.show_in_dashboard %}
+                            <a href="{% url 'payment' %}" class="box gift" style="background-color: {{package.label_color}}; color: {{package.text_color}};">
+                                <img src="{% static "system/img/gift.svg" %}" alt="Gift">
+                                <h5>{{ package.description}}</h5>
+                                <p>{{ package.extra }}% Extra On {{ package.amount }} USD Purchase</p>
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                {% include "utils/quick_links.html" %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block page_scripts %}
+    <script src="{% static "system/js/dashboard/dashboard_scripts.js" %}"></script>
+{% endblock page_scripts%}

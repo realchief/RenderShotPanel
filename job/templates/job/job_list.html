@@ -1,0 +1,132 @@
+{% extends 'utils/panel_base.html' %}
+{% load static %}
+{% block content %}
+    <div class="header">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-8 col-xl-8">
+                    <div class="title">
+                        <img src="{% static "system/img/jobs_tm.svg" %}" alt="Jobs">
+                        <h1>Jobs List</h1>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4 col-xl-4">
+                    {% include 'utils/panel_header_actions.html' %}
+                </div>
+            </div>
+        </div>
+        <div class="header_item jl_item">
+            <div class="container">
+                <div class="row">
+                    <div id="text_filters" class="col-12 col-md-7 col-lg-7 col-xl-7">
+                        <ul class="nav">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="#">All <span>{{ count_all }}</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a id="rendering_filter" class="nav-link st_rendering" href="#">Rendering
+                                    <span>{{ count_rendering }}</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a id="completed_filter" class="nav-link st_completed" href="#">Completed
+                                    <span>{{ count_completed }}</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a id="failed_filter" class="nav-link st_failed" href="#">Failed
+                                    <span>{{ count_failed }}</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-12 col-md-5 col-lg-5 col-xl-5">
+                        <div class="search-box">
+                            <input type="text" class="search-txt" placeholder="Search ..." id="jobs_search">
+                            <a class="search-btn">
+                                <i class="fas fa-search"></i>
+                            </a>
+                        </div>
+                        <div class="jobs_filter_actions">
+                            <div class="btn-group dropdown">
+                                <a class="btn btn-link dropdown-toggle" data-toggle="dropdown"
+                                   aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-tasks"></i>Action
+                                </a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#" id="delete-selected-jobs">Delete Jobs</a>
+                                    <a class="dropdown-item" href="#" id="suspend-selected-jobs">Suspend Jobs</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content jobs_list">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="rs_table">
+                    {% include 'utils/messages.html' %}
+                        <div class="table-responsive-xl">
+                            <table id="job_list_table" class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th scope="col" style="max-width: 20px">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="check_all">
+                                            <label class="custom-control-label" for="check_all"></label>
+                                        </div>
+                                    </th>
+                                    <th scope="col">Version</th>
+                                    <th scope="col">Job ID/Date</th>
+                                    <th scope="col">Frame/s</th>
+                                    <th scope="col">Render Plan</th>
+                                    <th scope="col" style="min-width: 200px">Status</th>
+                                    <th scope="col">Cost</th>
+                                    <th scope="col" style="text-align: right">Controller</th>
+                                </tr>
+                                </thead>
+                                <tbody class="infinite-container">
+                                {% for job in jobs %}
+                                    {% include 'job/widgets/job_item.html' %}
+                                {% endfor %}
+                                {% if page_obj.has_next %}
+                                    <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}"></a>
+                                {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="table_footer text-center loading" style="display: none;">
+                            <a>Loading...</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block page_modals %}
+
+    <!-- Job Details Modal -->
+    <div class="modal fade" id="job_details_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    </div>
+
+    <!-- Error Reports Modal -->
+    <div class="modal fade" id="job_error_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    </div>
+
+    <!-- Change Plan Modal -->
+    <div class="modal fade" id="change_plan_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    </div>
+
+    <!-- Resubmit Job Modal -->
+    <div class="modal fade" id="resubmit_job_modal" tabindex="-1" aria-labelledby="exampleModalLabel">
+    </div>
+
+
+
+{% endblock page_modals %}
+{% block page_scripts %}
+    <script src="{% static "system/js/libs/reconnecting-websocket.min.js" %}"></script>
+    <script src="{% static "system/js/job/job_list.js" %}"></script>
+{% endblock page_scripts %}
